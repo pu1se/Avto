@@ -1,0 +1,48 @@
+﻿@model PaymentMS.BL.Services.Stripe.Handlers.Queries.DefaultSendingWay.DefaultSendingWayQueryResponse
+
+@if (Model != null)
+{
+    <div class="row">
+        <div class="col-12">
+            <div class="row">
+                <h5>Current Card</h5>
+            </div>
+            <div class="row">
+                <div class="col-2">
+                    @if (Model.Card.CardBrand.ToLower() == "visa")
+                    {
+                        <img src="https://storage1b.censor.net/images/4/b/5/9/4b5995dafba7a5955f2e49b826026eeb/original.jpg" alt="@Model.Card.CardBrand" class="card" />
+                    }
+                    else if (Model.Card.CardBrand.ToLower() == "mastercard")
+                    {
+                        <img src="https://img.etimg.com/thumb/height-480,width-640,imgsize-114814,msid-60955286/.jpg" alt="@Model.Card.CardBrand" class="card" />
+                    }
+                    else
+                    {
+                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRn5DlnKP0OC03_3U5lysWiTz6FPdsgc9PS-hUChktyQa5IN02r" class="card" alt="@Model.Card.CardBrand" />
+                    }
+                </div>
+                <div class="col" style="margin: 0 10px;">
+                    <div style="font-weight: bold; font-size: 18px;">
+                        ****&nbsp;****&nbsp;****&nbsp;@Model.Card.Last4CardDigits&nbsp;&nbsp;&nbsp;
+                    </div>
+                    <span style="color: darkgrey">
+                        @(Model.Card.ExpireMonth)/@(Model.Card.ExpireYear)
+                    </span>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <style>
+        .card {
+            height: 50px;
+        }
+    </style>
+}
+else
+{
+    <h6>Payment card was not added. Please add a payment card on this <a href="@Url.Action("AddCard", "Cards")">page</a>.</h6>
+}
+

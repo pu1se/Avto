@@ -1,0 +1,62 @@
+﻿@model PaymentMS.UI.Web.ViewModels.Balance.SendBalancePaymentViewModel
+@{
+    ViewBag.Title = "Pay by Balance";
+    Layout = "_Layout";
+}
+
+<div class="container">
+
+        <div class="row">
+            <h2 class="col-md-12 text-center">Pay by Balance</h2>
+        </div>
+
+        <br />
+
+        @await Html.PartialAsync("Notification", Model)
+
+        <br />
+
+        <div class="row">
+            <div class="offset-2 col-md-8">
+                <h6>Balance Providers:</h6>
+                @foreach (var receiver in Model.ReceiverList)
+                {
+                    <div class="row form-check">
+                        @Html.RadioButtonFor(model => model.SelectedProviderId, receiver.OrganizationId,
+                            new
+                            {
+                                id = receiver.OrganizationId,
+                                @class = "form-check-input",
+                                style = "margin-top: 8px;",
+                                @checked = receiver.OrganizationId == Model.SelectedProviderId
+                            })
+                        <label for="@receiver.OrganizationId" class="form-check-label">@receiver.OrganizationName</label>
+                    </div>
+                }
+
+            </div>
+        </div>
+
+        <br />
+
+        <div id="client-list" data-url="@Url.Action("BalanceClientList")"></div>
+</div>
+
+<script>
+    let selectedRadioBtn = $("[name=SelectedProviderId]:checked:first");
+    initStateByRadioControl(selectedRadioBtn);
+
+    $("[name=SelectedProviderId]").change(function () {
+        var selectedRadioBtn = $(this);
+        initStateByRadioControl(selectedRadioBtn);
+    });
+
+    function initStateByRadioControl(selectedRadioBtn) {
+        const div = $("#client-list");
+        div.load(div.attr("data-url") + "?providerId=" + selectedRadioBtn.attr("id"), function() {
+
+        }, function(error) {
+            console.log(error);
+        });
+    }
+</script>

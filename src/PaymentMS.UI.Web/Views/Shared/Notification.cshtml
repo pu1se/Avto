@@ -1,0 +1,29 @@
+﻿@model BaseViewModel
+
+@if (Model.IsSuccess)
+{
+    <br/>
+    <div class="row">
+        <h4 class="col-md-12 text-center" id="success" style="border: solid #5cb85c 2px; background-color: #edf7ed; color: #5cb85c; padding: 10px;">
+            Success
+        </h4>
+    </div>
+    <script>
+        $("#success").delay(5000).slideUp();
+    </script>
+    <br/>
+}
+
+@if (!Model.ErrorMessage.IsNullOrEmpty())
+{
+    <br/>
+    <div class="row">
+        <h4 class="col-md-12 text-center" id="error" style="border: solid #cd0a0a 2px; background-color: #f8e8e6; color: #cd0a0a; padding: 10px;">
+            @Model.ErrorMessage
+        </h4>
+    </div>
+    <script>
+        $("#error").delay(25000).slideUp();
+    </script>
+    <br/>
+}

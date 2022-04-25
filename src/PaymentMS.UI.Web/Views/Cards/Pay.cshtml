@@ -1,0 +1,143 @@
+﻿@model PayWithStripeCard
+
+@{
+    ViewBag.Title = "Pay";
+    Layout = "_Layout";
+}
+
+<div class="container">
+    <div class="offset-3 col-md-6">
+
+        <div class="row">
+            <h2 class="col-md-12 text-center">Pay</h2>
+        </div>
+
+        <br />
+
+        @await Html.PartialAsync("Notification", Model)
+
+        <form id="payment-form" action="@Url.Action("Pay")" method="post">
+            <div class="row">
+                <div class="col-md-12">
+                    <span>Receiver:</span>
+                    @foreach (var receiver in Model.ReceiverList)
+                    {
+                        <div class="row form-check">
+                            @Html.RadioButtonFor(model => model.SelectedReceivingWayId, receiver.ReceiverOrganizationId,
+                                new
+                                {
+                                    id = receiver.ReceiverOrganizationId,
+                                    @class = "form-check-input",
+                                    style = "margin-top: 8px;",
+                                    publickey=receiver.PublicKey,
+                                    receivername=receiver.ReceiverOrganizationName,
+                                    @checked = receiver.ReceiverOrganizationId == Model.SelectedReceivingWayId
+                                })
+                            <label for="@receiver.ReceiverOrganizationId" class="form-check-label">@receiver.ReceiverOrganizationName</label>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <br />
+
+            <div data-url="@Url.Action("GetCurrentCard")"></div>
+
+            <br />
+
+            <div class="row">
+                <div class="col-md-3">
+                    @Html.TextBoxFor(m => m.PaymentAmount, new { @class = "form-control" })
+                </div>
+                <div class="col-md-2">
+                    @Html.DropDownListFor(m => m.PaymentCurrency, Model.CurrencyList)
+                </div>
+            </div>
+
+            <br />
+
+            <div class="row">
+                <button type="submit" class="btn btn-primary col-md-12">
+                    Send Payment
+                </button>
+            </div>
+        </form>
+
+        <br />
+        <br />
+        <br />
+        <div class="row">
+            <h2 class="col-md-12 text-center">All Payments</h2>
+        </div>
+    </div>
+    
+    <div class="offset-1 col-10">
+        
+        <table class="table table-bordered">
+            <thead class="thead-light">
+            <tr>
+                <th scope="col">Sent from</th>
+                <th scope="col">Card info</th>
+                <th scope="col">Received by</th>
+                <th scope="col">Payed</th>
+                <th scope="col">Created at</th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var payment in Model.PaymentList)
+            {
+                <tr>
+                    <td>@payment.SentFromOrganizationName</td>
+                    <td>@payment.CardInfo.CardBrand &nbsp;****&nbsp;****&nbsp;****&nbsp;@payment.CardInfo.Last4CardDigits</td>
+                    <td>@payment.ReceivedByOrganizationName</td>
+                    <td>@payment.PaymentAmount &nbsp;@payment.PaymentCurrency</td>
+                    <td>@payment.CreatedDate.ToString("g")</td>
+                </tr>
+            }
+            </tbody>
+        </table>
+
+        
+    </div>
+</div>
+
+<script>
+
+    let selectedRadioBtn = $("[type=radio]:checked:first");
+    initStateByRadioControl(selectedRadioBtn);
+
+    $("input[name=SelectedReceivingWayId]").change(function() {
+        var selectedRadioBtn = $(this);
+        initStateByRadioControl(selectedRadioBtn);
+    });
+
+    function initStateByRadioControl(selectedRadioBtn) {
+        $("button").text("Send Payment to " + selectedRadioBtn.attr("receivername"));
+
+        const div = $("div[data-url]");
+        div.load(div.attr("data-url") + "?receiverOrganizationId=" + selectedRadioBtn.attr("id"));
+    }
+</script>
+
+<style>
+    .green {
+        border: solid green 1.2px;
+    }
+
+    .error {
+        border: solid darkred 1.2px;
+    }
+
+    .stripe-control {
+        padding-top: 10px;
+    }
+
+    input[type=text]:focus, input[type=email]:focus {
+        border: solid green 1.2px;
+        box-shadow: none;
+    }
+
+    input.middle:focus {
+        outline-width: 0;
+    }
+</style>

@@ -1,0 +1,91 @@
+﻿@model PaymentMS.UI.Web.ViewModels.Balance.BalanceProviderViewModel
+
+@{
+    ViewBag.Title = "Add Balance Provider";
+    Layout = "_Layout";
+}
+
+<div class="container">
+
+    <div class="offset-2 col-8">
+        <div class="row">
+            <h2 class="col-md-12 text-center">Add Balance Provider</h2>
+        </div>
+    </div>
+
+    <div class="offset-3 col-md-6">
+
+        <br />
+
+        @await Html.PartialAsync("Notification", Model)
+
+        <br />
+
+        <form action="@Url.Action("AddBalanceProvider")" method="post">
+            <div class="row">
+                <div class="col-md-12">
+                    <h6>Payment Receivers configuration:</h6>
+                    @foreach (var receiver in Model.ReceiverList)
+                    {
+                        <div class="row form-check">
+                            @Html.RadioButtonFor(model => model.SelectedReceiverId, receiver.OrganizationId,
+                                new
+                                {
+                                    id = receiver.OrganizationId,
+                                    @class = "form-check-input",
+                                    style = "margin-top: 8px;",
+                                    @checked = receiver.OrganizationId == Model.SelectedReceiverId
+                                })
+                            <label for="@receiver.OrganizationId" class="form-check-label">@receiver.OrganizationName</label>
+                        </div>
+                    }
+
+                </div>
+            </div>
+
+            <br />
+            <h6>
+                Selected Receiver Configuration:
+            </h6>
+
+            <div data-url="@Url.Action("BalanceProvider")"></div>
+        </form>
+    </div>
+</div>
+<script>
+    let selectedRadioBtn = $("[type=radio]:checked:first");
+    initStateByRadioControl(selectedRadioBtn);
+
+    $("input[name=SelectedReceiverId]").change(function () {
+        var selectedRadioBtn = $(this);
+        initStateByRadioControl(selectedRadioBtn);
+    });
+
+    function initStateByRadioControl(selectedRadioBtn) {
+        const div = $("div[data-url]");
+        div.load(div.attr("data-url") + "?receivingWayId=" + selectedRadioBtn.attr("id"), function() {
+            
+            $("#@Html.IdFor(m=>m.ProviderOrganizationId)").prop("disabled", true);
+            if (selectedRadioBtn.attr("id") == "@Guid.Empty") {
+                $("#@Html.IdFor(m=>m.ProviderOrganizationName)").prop("disabled", false);
+            } else {
+                $("#@Html.IdFor(m=>m.ProviderOrganizationName)").prop("disabled", true);
+            }
+
+            if ($("#@Html.IdFor(m=>m.StripePublicKey)").val() == "") {
+                $("#@Html.IdFor(m=>m.StripePublicKey)").prop("disabled", false);
+                $("#@Html.IdFor(m=>m.StripeSecretKey)").prop("disabled", false);
+            } else {
+                $("#@Html.IdFor(m=>m.StripePublicKey)").prop("disabled", true);
+                $("#@Html.IdFor(m=>m.StripeSecretKey)").prop("disabled", true).val("***********************");
+            }
+
+        }, function(error) {
+            console.log(error);
+        });
+    }
+
+    $(document).on("submit", "body", function() {
+        $("input").prop("disabled", false);
+    });
+</script>

@@ -1,0 +1,64 @@
+﻿@model PaymentMS.UI.Web.ViewModels.Balance.BalanceClientListViewModel
+
+@{
+    Layout = null;
+}
+
+@if (Model.ClientList.Any())
+{
+    <div class="row">
+        <div class="offset-2 col-md-8">
+            <h6>Balance Clients:</h6>
+            @foreach (var client in Model.ClientList)
+            {
+                <div class="row form-check">
+                    @Html.RadioButtonFor(model => model.SelectedClientId, client.ClientOrganizationId,
+                        new
+                        {
+                            id = client.ClientOrganizationId,
+                            @class = "form-check-input",
+                            style = "margin-top: 8px;",
+                            @checked = client.ClientOrganizationId == Model.SelectedClientId
+                        })
+                    <label for="@client.ClientOrganizationId" class="form-check-label">@client.ClientOrganizationName</label>
+                </div>
+            }
+        </div>
+    </div>
+
+    <br />
+
+    <div id="increase" data-url="@Url.Action("HistoryTable")"></div>
+
+
+    <script>
+        var selectedClientRadioBtn = $("[name=SelectedClientId]:checked:first");
+        initClientStateByRadioControl(selectedClientRadioBtn);
+
+        $("[name=SelectedClientId]").change(function() {
+            var selectedRadioBtn = $(this);
+            initClientStateByRadioControl(selectedRadioBtn);
+        });
+
+        function initClientStateByRadioControl(selectedRadioBtn) {
+            var selectedProvider = $("[name=SelectedProviderId]:checked:first");
+            const div = $("#increase");
+            div.load(div.attr("data-url") +
+                "?clientId=" +
+                selectedRadioBtn.attr("id") +
+                "&providerId=" +
+                selectedProvider.attr("id"),
+                function() {
+
+                },
+                function(error) {
+                    console.log(error);
+                });
+        }
+    </script>
+}
+else
+{
+    <h6 style="color:firebrick">No Clients</h6>
+}
+

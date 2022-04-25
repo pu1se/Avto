@@ -1,0 +1,37 @@
+﻿@model PaymentMS.UI.Web.ViewModels.Balance.IncreaseViewModel
+
+@{
+    Layout = null;
+}
+
+<div class="row">
+    <div class="col-md-12">
+        Current Balance: 
+        <span>@Model.CurrentAmount</span>
+        @Html.DropDownListFor(m => m.Currency, Model.CurrencyList, new
+        {
+            style = "width:80px",
+            disabled="disabled"
+        })
+    </div>
+</div>
+
+<br/>
+
+<div class="row">
+    <div class="col-md-12">
+        Increase Balance on: 
+        @Html.TextBoxFor(m => m.AddAmount, new { style = "width:60px" })
+        @Html.DropDownListFor(m => m.Currency, Model.CurrencyList, new
+   {
+       style = "width:80px",
+       disabled="disabled"
+   })
+    </div>
+</div>
+
+<br/>
+
+<button type="submit" class="btn btn-primary col-md-12">
+    Increase client balance
+</button>

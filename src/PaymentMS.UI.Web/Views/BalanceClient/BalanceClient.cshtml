@@ -1,0 +1,47 @@
+﻿@model PaymentMS.UI.Web.ViewModels.Balance.BalanceClientViewModel
+@{
+    Layout = null;
+}
+
+@if (Model.ClientOrganizationId != Guid.Empty)
+{
+    <div class="row">
+        <div class="col-md-12">
+            <h5>You are balance client</h5>
+        </div>
+    </div>
+
+    <br />
+
+    <div class="row">
+        <div class="col-md-12">
+            <h6>
+                Current Balance:
+                <span>@Model.Amount</span>
+                <span>@Model.Currency</span>
+            </h6>
+        </div>
+    </div>
+
+    <br />
+
+    <div class="row">
+        <div class="col-md-12">
+            <h6>
+                Credit Limit:
+                <span>@Model.CreditLimit</span>
+                <span>@Model.Currency</span>
+            </h6>
+        </div>
+    </div>
+}
+else
+{
+    <div class="row">
+        <div class="col-md-12">
+            <button type="submit" class="btn btn-primary">
+                I agree to become balance client
+            </button>
+        </div>
+    </div>
+}

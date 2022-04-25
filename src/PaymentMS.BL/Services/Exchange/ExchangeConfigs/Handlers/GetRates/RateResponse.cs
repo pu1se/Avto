@@ -1,0 +1,17 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+using PaymentMS.DAL.Enums;
+
+namespace PaymentMS.BL.Services.Exchange.ExchangeRates.Handlers.GetRatesByOrganization
+{
+    public class RateResponse
+    {
+        public CurrencyType FromCurrency { get; set; }
+        public CurrencyType ToCurrency { get; set; }
+        public decimal ExchangeRate { get; set; }
+        public DateTime ExchangeDate { get; set; }
+        public Guid ProvidedByOrganizationId { get; set; }
+        public decimal ExchangeRateWithSurcharge { get; set; }
+    }
+}
