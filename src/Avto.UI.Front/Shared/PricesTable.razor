@@ -1,0 +1,119 @@
+﻿<table class="table table-bordered">
+    <thead class="thead-light">
+    <tr>
+        <th scope="col">Offer Name</th>
+        <th scope="col">Price</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var offer in OfferList)
+    {
+        <tr>
+            <td>@offer.Name</td>
+            <td>
+                <span>
+                    @offer.Price.ConvertedAmount
+                    @offer.Price.ConvertedCurrency
+                    / Month
+                </span>
+                <span style="font-size: 10px; margin-left: 10px; color: #999">
+                    (
+                    <span>
+                        @offer.Price.OriginalAmount
+                        @offer.Price.OriginalCurrency
+                        / Month
+                    </span>
+                    )
+                </span>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
+<br/>
+<h3>Cartesian product</h3>
+<table class="table table-bordered">
+    <thead class="thead-light">
+        <tr>
+            <th scope="col">From</th>
+            <th scope="col">To</th>
+            <th scope="col">Rate</th>
+            <th scope="col">Rate + Surcharge</th>
+            <th scope="col">Exchange Date</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var rate in CurrencyConverter.ExchangeRateList.OrderBy(x=>x.FromCurrency))
+        {
+            <tr>
+                <td>@rate.FromCurrency</td>
+                <td>@rate.ToCurrency</td>
+                <td>@rate.ExchangeRate</td>
+                <td>@rate.ExchangeRateWithSurcharge</td>
+                <td>@rate.ExchangeDate</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@using Avto.UI.Front.Currency
+@using Avto.DAL.Enums
+@using Avto.UI.Front.ViewModels
+@code {
+    [Parameter]
+    public string SelectedCurrency { get; set; }
+
+    [Parameter]
+    public CurrencyConverter CurrencyConverter { get; set; }
+
+    private List<OfferItemModel> OfferList { get; set; } = new List<OfferItemModel>();
+
+    protected override void OnParametersSet()
+    {
+        var convertToCurrency = EnumHelper.Parse<CurrencyType>(SelectedCurrency);
+        OfferList = new List<OfferItemModel>
+        {
+            new OfferItemModel
+            {
+                Name = "Office 365",
+                Price = CurrencyConverter.From(85, CurrencyType.USD).To(convertToCurrency)
+            },
+            new OfferItemModel
+            {
+                Name = "Azure wep app",
+                Price = CurrencyConverter.From(100, CurrencyType.USD).To(convertToCurrency)
+            },
+            new OfferItemModel
+            {
+                Name = "Azure sql server",
+                Price = CurrencyConverter.From(100, CurrencyType.EUR).To(convertToCurrency)
+            },
+            new OfferItemModel
+            {
+                Name = "Windows 10",
+                Price = CurrencyConverter.From(200, CurrencyType.SEK).To(convertToCurrency)
+            },
+            new OfferItemModel
+            {
+                Name = "AWS subscription",
+                Price = CurrencyConverter.From(100, CurrencyType.NOK).To(convertToCurrency)
+            },
+            new OfferItemModel
+            {
+                Name = "AWS subscription 2",
+                Price = CurrencyConverter.From(400, CurrencyType.DKK).To(convertToCurrency)
+            },
+            new OfferItemModel
+            {
+                Name = "Subscription 3",
+                Price = CurrencyConverter.From(500, CurrencyType.NZD).To(convertToCurrency)
+            }
+        };
+
+
+        foreach (var item in OfferList)
+        {
+            item.Price.ConvertedAmount = Math.Round(item.Price.ConvertedAmount, 10);
+        }
+    }
+}

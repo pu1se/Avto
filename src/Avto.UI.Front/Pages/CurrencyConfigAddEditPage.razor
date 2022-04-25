@@ -1,0 +1,292 @@
+﻿@page "/currency-configs/{selectedCurrency}"
+
+    <h3>Currency \ @GetTitle()</h3>
+<br />
+<PageViewer PageModel="@Model">
+    <div class="row">
+        <div class="col-4">
+            From your default currency
+        </div>
+        <div class="col-3">
+            <span style="color: #999;">@Model.Config.FromCurrency</span>
+        </div>
+    </div>
+    <br/>
+    <div class="row">
+        <div class="col-4">
+            To currency
+        </div>
+        <div class="col-3">
+            <select value="@Model.Config.ToCurrency" @onchange="OnCurrencyChange" disabled="@(!Model.IsAddingNewConfig)">
+                @foreach (var currency in Model.AvailableCurrencyList)
+                {
+                    <option value="@currency.Code">
+                        @currency.Code ( @currency.Name )
+                    </option>
+                }
+            </select>
+        </div>
+    </div>
+    <br/>
+    <div class="row">
+        <div class="col-4">
+            Source
+        </div>
+        <div class="col-3">
+            <select value="@Model.Config.RateSourceProvider" @onchange="OnProviderChange">
+                @foreach (var provider in Model.ProviderList)
+                {
+                    <option value="@provider.Id">
+                        @provider.Name
+                    </option>
+                }
+            </select>
+        </div>
+    </div>
+    <br/>
+    <div class="row">
+        <div class="col-4">
+            Rate
+        </div>
+        <div class="col-2">
+            @if (Model.Config.RateSourceProvider.IsCustomProvider())
+            {
+                <input @onchange="OnCustomerRateChange" value="@Model.Config.CustomRate" type="number" style="width: 58px;" min="0"/>
+            }
+            else 
+            {
+                @Model.Config.CurrentRate
+            }
+        </div>
+    </div>
+    <br/>
+    <div class="row">
+        <div class="col-4">
+            Surcharge, %
+        </div>
+        <div class="col-2">
+            <input @onchange="OnSurchargeChange" value="@Model.Config.SurchargeAsPercent" type="number" style="width: 58px;" min="0"/>
+        </div>
+    </div>
+    <br/>
+    <div class="row">
+        <div class="col-4">
+            <h4 style="font-size: 22px;">Final rate</h4>
+        </div>
+        <div class="col-2">
+            <h4 style="font-size: 22px;">
+                @Model.Config.CurrentRateWithSurcharge
+            </h4>
+        </div>
+    </div>
+    <br/>
+    <br/>
+    <div class="row">
+        @if (!Model.IsAddingNewConfig)
+        {
+            <div class="col-2">
+                <button @onclick="OnDeleteBtnClick" class="btn btn-link" style="text-decoration: underline;">
+                    delete
+                </button>
+            </div>
+        }
+        else
+        {
+            <div class="col-2"></div>
+        }
+        
+    <div class="offset-5 col-4">
+        <a href="/currency-configs" class="btn btn-outline-info">Cancel</a>
+        <button @onclick="OnSaveBtnClick" class="btn btn-success" style="width: 130px; margin-right: 10px;">Save</button>
+    </div>
+    </div>
+</PageViewer>
+
+@using Newtonsoft.Json
+@using Avto.BL
+@using Avto.BL.Services.Exchange.Handlers.Queries.GetExchangeConfigs
+@using Avto.BL.Services.Exchange.Handlers.Queries.GetProviderExchangeRates
+@using Avto.DAL
+@using Avto.DAL.Enums
+@using Avto.UI.Front.ApiRequests
+@using Avto.UI.Front.ViewModels
+@inject ExchangeOrganizationConfigApiClient ExchangeConfigApi
+@inject ExchangeProviderApiClient ProviderApi
+@inject NavigationManager Navigation
+@inject IJSRuntime script
+@inherits BasePage<CurrencyConfigAddEditPageModel>
+@code {
+    [Parameter]
+    public string SelectedCurrency { get; set; }
+    private const string BaseCurrency = "NOK";
+
+    protected override async Task OnInitializedAsync()
+    {
+        Model.IsAddingNewConfig = SelectedCurrency == "Add";
+
+        var getConfigsResult = await ExchangeConfigApi.GetConfigsAsync(TestData.FrontSellerOrganizationId);
+        if (!getConfigsResult.IsSuccess)
+        {
+            ShowError(getConfigsResult.ErrorMessage);
+            return;
+        }
+
+        var exchangeRateListResult = await ExchangeConfigApi.GetRatesAsync(TestData.FrontSellerOrganizationId);
+        if (!exchangeRateListResult.IsSuccess)
+        {
+            ShowError(exchangeRateListResult.ErrorMessage);
+            return;
+        }
+
+        var getCurrenciesResult = await ProviderApi.GetAvailableCurrenciesAsync();
+        if (!getCurrenciesResult.IsSuccess)
+        {
+            ShowError(getCurrenciesResult.ErrorMessage);
+            return;
+        }
+
+        var getProviderListResult = await ProviderApi.GetProvidersAsync();
+        if (!getProviderListResult.IsSuccess)
+        {
+            ShowError(getProviderListResult.ErrorMessage);
+            return;
+        }
+        Model.ProviderList = getProviderListResult.Data;
+
+        var usingCurrenciesList = getConfigsResult.Data.Select(item => item.ToCurrency.ToString()).ToList();
+        var allCurrenciesList = getCurrenciesResult.Data;
+        var showCurrenciesList = allCurrenciesList
+            .Where(x => !usingCurrenciesList.Contains(x.Code) && x.Code != BaseCurrency)
+            .ToList();
+        if (Model.IsAddingNewConfig)
+        {
+            Model.Config = new AddEditConfigModel
+            {
+                FromCurrency = BaseCurrency,
+                ToCurrency = showCurrenciesList.First().Code,
+                OrganizationId = TestData.FrontSellerOrganizationId,
+                RateSourceProvider = ExchangeProviderType.ECB.ToString()
+            };
+            await OnProviderChange(new ChangeEventArgs{Value = Model.Config.RateSourceProvider});
+        }
+        else
+        {
+            showCurrenciesList.Add(allCurrenciesList.First(item => item.Code == SelectedCurrency));
+            var currentConfig = getConfigsResult.Data.First(x => x.ToCurrency.ToString() == SelectedCurrency);
+            Model.Config = new AddEditConfigModel
+            {
+                FromCurrency = currentConfig.FromCurrency.ToString(),
+                ToCurrency = currentConfig.ToCurrency.ToString(),
+                OrganizationId = currentConfig.OrganizationId,
+                SurchargeAsPercent = currentConfig.SurchargeAsPercent,
+                RateSourceProvider = currentConfig.RateSourceProvider,
+                CurrentRate = currentConfig.ExchangeRate
+            };
+            if (Model.Config.RateSourceProvider.IsCustomProvider())
+            {
+                Model.Config.CustomRate = currentConfig.CustomRate;
+                Model.Config.CurrentRate = currentConfig.CustomRate.Value;
+            }
+        }
+        Model.AvailableCurrencyList = showCurrenciesList;
+        await RefreshRateFromProvider();
+
+        Model.IsReady = true;
+    }
+
+
+    async Task OnCurrencyChange(ChangeEventArgs e)
+    {
+        Model.Config.ToCurrency = e.Value.ToString();
+        await RefreshRateFromProvider();
+    }
+
+    async Task OnProviderChange(ChangeEventArgs e)
+    {
+        Model.Config.RateSourceProvider = e.Value.ToString();
+
+        if (Model.Config.RateSourceProvider.IsCustomProvider())
+        {
+            Model.Config.CustomRate = 0;
+        }
+        else
+        {
+            Model.Config.CustomRate = null;
+            await RefreshRateFromProvider();
+        }
+    }
+
+    void OnSurchargeChange(ChangeEventArgs e)
+    {
+        var surcharge = decimal.Parse(e.Value.ToString());
+
+        Model.Config.SurchargeAsPercent = surcharge;
+    }
+
+    void OnCustomerRateChange(ChangeEventArgs e)
+    {
+        var customerRate = decimal.Parse(e.Value.ToString());
+        Model.Config.CustomRate = customerRate;
+        Model.Config.CurrentRate = customerRate;
+    }
+
+    async Task OnSaveBtnClick()
+    {
+        await script.InvokeAsync<string>("console.log", "Save: ", JsonConvert.SerializeObject(Model.Config));
+        var saveResult = await ExchangeConfigApi.AddEditConfigAsync(Model.Config);
+
+        if (!saveResult.IsSuccess)
+        {
+            ShowError(saveResult.ErrorMessage);
+            return;
+        }
+
+        Navigation.NavigateTo("currency-configs");
+    }
+
+    async Task OnDeleteBtnClick()
+    {
+        var deleteResult = await ExchangeConfigApi.DeleteConfigAsync(Model.Config);
+
+        if (!deleteResult.IsSuccess)
+        {
+            ShowError(deleteResult.ErrorMessage);
+            return;
+        }
+
+        Navigation.NavigateTo("currency-configs");
+    }
+
+    string GetTitle()
+    {
+        if (Model.IsAddingNewConfig)
+        {
+            return "Add new";
+        }
+
+        return SelectedCurrency;
+    }
+
+    async Task RefreshRateFromProvider()
+    {
+        if (Model.Config.RateSourceProvider.IsCustomProvider())
+        {
+            return;
+        }
+        
+        var getRateResult = await ProviderApi.GetRateFromProviderAsync(new GetTodayRateFromProviderQuery
+        {
+            OrganizationId = Model.Config.OrganizationId,
+            FromCurrency = Model.Config.FromCurrency.AsEnum<CurrencyType>(),
+            ToCurrency = Model.Config.ToCurrency.AsEnum<CurrencyType>(),
+            Provider = Model.Config.RateSourceProvider.AsEnum<ExchangeProviderType>()
+        });
+        if (!getRateResult.IsSuccess)
+        {
+            ShowError(getRateResult.ErrorMessage);
+            return;
+        }
+
+        Model.Config.CurrentRate = getRateResult.Data.ExchangeRate;
+    }
+}

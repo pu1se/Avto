@@ -1,0 +1,71 @@
+﻿@page "/prices"
+
+<h3>Prices</h3>
+
+<PageViewer PageModel="@Model">
+    <div class="row">
+        <div class="col-8">
+            <br/>
+            <div class="row">
+                <div class="col-3">
+                    Preferred currency:
+                </div>
+                <div class="col-2">
+                    <select @bind="Model.SelectedCurrency">
+                        @foreach (var currency in Model.CurrencyList)
+                        {
+                            <option value="@currency">@currency</option>
+                        }
+                    </select>
+                </div>
+            </div>
+            <br />
+            <br />
+            @if (Model.CurrencyList.Any())
+            {
+                <PricesTable SelectedCurrency="@Model.SelectedCurrency" CurrencyConverter="@Model.CurrencyConverter"></PricesTable>                
+            }
+            else
+            {
+                <p>There is no one available preferred currency.</p>
+            }
+        </div>
+    </div>
+</PageViewer>
+
+@using Avto.DAL
+@using Avto.DAL.Enums
+@using Avto.UI.Front.ApiRequests
+@using Avto.UI.Front.Currency
+@using Avto.UI.Front.ViewModels
+@inject ExchangeOrganizationConfigApiClient ExchangeConfigApi
+@inherits BasePage<PricesListPageModel>
+@code {
+
+    protected override async Task OnInitializedAsync()
+    {
+        var getConfigListResult = await ExchangeConfigApi.GetConfigsAsync(TestData.FrontSellerOrganizationId);
+        if (!getConfigListResult.IsSuccess)
+        {
+            ShowError(getConfigListResult.ErrorMessage);
+            return;
+        }
+        Model.CurrencyList = getConfigListResult.Data.Select(item => item.ToCurrency).ToList();
+        if (Model.CurrencyList.Count == 0)
+        {
+            return;
+        }
+        Model.CurrencyList.Add(getConfigListResult.Data.Select(item => item.FromCurrency).First());
+        Model.SelectedCurrency = Model.CurrencyList.First().ToString();
+
+        var exchangeRateListResult = await ExchangeConfigApi.GetRatesAsync(TestData.FrontSellerOrganizationId);
+        if (!exchangeRateListResult.IsSuccess)
+        {
+            ShowError(exchangeRateListResult.ErrorMessage);
+            return;
+        }
+
+        Model.CurrencyConverter = new CurrencyConverter(exchangeRateListResult.Data);
+        Model.IsReady = true;
+    }
+}
