@@ -33,6 +33,5 @@ namespace Avto.DAL.Entities
         public decimal OpenDayRate { get; set; }
         public decimal MinDayRate { get; set; }
         public decimal MaxDayRate { get; set; }
-        public bool HasExtraInfoForRate { get; set; }
     }
 }
