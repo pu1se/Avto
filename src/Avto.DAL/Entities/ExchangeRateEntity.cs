@@ -8,7 +8,7 @@ using Avto.DAL.Enums;
 namespace Avto.DAL.Entities
 {
     [Table("CurrencyExchangeRates")]
-    public class CurrencyExchangeRateEntity : IEntityWithGuidId
+    public class ExchangeRateEntity : IEntityWithGuidId
     {
         [Key]
         public Guid Id { get; set; }
@@ -21,15 +21,11 @@ namespace Avto.DAL.Entities
         [ForeignKey("ToCurrencyCode")]
         public virtual CurrencyEntity ToCurrencyEntity { get; set; }
 
+        // Close day rate.
         public decimal Rate { get; set; }
 
+        [Column(TypeName = "Date")]
         public DateTime ExchangeDate { get; set; }
-
-        public ExchangeProviderType ExchangeProvider { get; set; }
-
-        public Guid? OrganizationId { get; set; }
-        [ForeignKey("OrganizationId")]
-        public virtual OrganizationEntity Organization { get; set; }
 
         public DateTime CreatedDateUtc { get; set; }
         public DateTime LastUpdatedDateUtc { get; set; }

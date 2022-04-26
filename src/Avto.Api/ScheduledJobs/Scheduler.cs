@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+﻿using System.Linq;
 using System.Reflection;
-using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Avto.Api.ScheduledJobs;
-using Avto.BL.Services;
-using Avto.BL.Services.Exchange.ExchangeProviders;
 using Quartz;
 using Quartz.Impl;
 
@@ -18,8 +12,6 @@ namespace Avto.Api.JobsScheduler
         public static void StartAllScheduledJobs(IServiceCollection services)
         {
             var scheduler = CreateScheduler(services);
-
-            scheduler.StartJobFor<CalculateAllTodayExchangeRatesScheduledJob>(withIntervalInMinutes: 60);
         }
 
 

@@ -11,22 +11,15 @@ using Avto.DAL.Entities;
 
 namespace Avto.DAL
 {
-    public sealed class DataContext : DbContext
+    public sealed class Storage : DbContext
     {
-        public DbSet<OrganizationEntity> Organizations { get; set; }        
-        public DbSet<SendingWayEntity> PaymentSendingWays { get; set; }
-        public DbSet<ReceivingWayEntity> PaymentReceivingWays { get; set; }
-        public DbSet<PaymentEntity> Payments { get; set; }
-        public DbSet<BalanceProviderEntity> BalanceProviders { get; set; }
-        public DbSet<BalanceClientEntity> BalanceClients { get; set; }
-        public DbSet<ApiLogEntity> ApiLogs { get; set; }
-        public DbSet<CurrencyEntity> Currencis { get; set; }
-        public DbSet<CurrencyExchangeRateEntity> ExchangeRates { get; set; }
-        public DbSet<CurrencyExchangeConfigEntity> CurrencyConfigs { get; set; }
-        public DbSet<CalculatedCurrencyExchangeRateEntity> CalculatedCurrencyExchangeRates { get; set; }
+        public DbSet<LogEntity> Logs { get; set; }
+        public DbSet<CurrencyEntity> Currencies { get; set; }
+        public DbSet<ExchangeRateEntity> ExchangeRates { get; set; }
         private static bool MigrationWasChecked { get; set; }
-        
-        public DataContext(DbContextOptions<DataContext> options)
+        public bool UseNoTracking { get; set; }
+
+        public Storage(DbContextOptions<Storage> options)
             : base(options)
         {
             if (!MigrationWasChecked)
@@ -37,7 +30,7 @@ namespace Avto.DAL
         }
 
         //hack: for add-migration command
-        public DataContext() : base(GetOptions(@"Server=.\; Database=Avto; Initial Catalog=Avto;Integrated Security=False;Trusted_Connection=True;"))
+        public Storage() : base(GetOptions(@"Server=.\; Database=Avto; Initial Catalog=Avto;Integrated Security=False;Trusted_Connection=True;"))
         {
         }
 
@@ -57,47 +50,12 @@ namespace Avto.DAL
 
         private static void SetIndexes(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<CurrencyExchangeRateEntity>()
+            modelBuilder.Entity<ExchangeRateEntity>()
                 .HasIndex(e => e.ExchangeDate);
-            modelBuilder.Entity<CurrencyExchangeRateEntity>()
-                .HasIndex(e => e.ExchangeProvider);
-            modelBuilder.Entity<CurrencyExchangeRateEntity>()
+            modelBuilder.Entity<ExchangeRateEntity>()
                 .HasIndex(e => e.FromCurrencyCode);
-            modelBuilder.Entity<CurrencyExchangeRateEntity>()
+            modelBuilder.Entity<ExchangeRateEntity>()
                 .HasIndex(e => e.ToCurrencyCode);
-
-
-            modelBuilder.Entity<CurrencyExchangeConfigEntity>()
-                .HasKey(
-                e => new
-                {
-                    e.FromCurrencyCode,
-                    e.ToCurrencyCode,
-                    e.OrganizationId
-                });
-            modelBuilder.Entity<CurrencyExchangeConfigEntity>()
-                .HasIndex(e => e.OrganizationId);
-
-
-            modelBuilder.Entity<CalculatedCurrencyExchangeRateEntity>()
-                .HasIndex(
-                    e => new
-                    {
-                        e.FromCurrencyCode,
-                        e.ToCurrencyCode,
-                        e.ExchangeDate,
-                        e.OrganizationId
-                    });
-            modelBuilder.Entity<CalculatedCurrencyExchangeRateEntity>()
-                .HasIndex(e => e.FromCurrencyCode);
-            modelBuilder.Entity<CalculatedCurrencyExchangeRateEntity>()
-                .HasIndex(e => e.ToCurrencyCode);
-            modelBuilder.Entity<CalculatedCurrencyExchangeRateEntity>()
-                .HasIndex(e => e.OrganizationId);
-            modelBuilder.Entity<CalculatedCurrencyExchangeRateEntity>()
-                .HasIndex(e => e.ExchangeDate).IsClustered(true);
-            modelBuilder.Entity<CalculatedCurrencyExchangeRateEntity>()
-                .HasKey(e => e.Id).IsClustered(false);
         }
 
         private static void SetDefaultDecimalSize(ModelBuilder modelBuilder)

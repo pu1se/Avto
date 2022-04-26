@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using Avto.BL._Core;
-using Avto.DAL.Repositories;
+using Avto.DAL;
 
 namespace Avto.BL
 {
@@ -12,13 +10,13 @@ namespace Avto.BL
         where TQuery : Query
     {
         protected Storage Storage { get; }
-        protected LogService Logger { get; }
+        protected LogService LogService { get; }
 
-        protected QueryHandler(Storage storage, LogService logger)
+        protected QueryHandler(Storage storage, LogService logService)
         {
             Storage = storage;
             Storage.UseNoTracking = true;
-            Logger = logger;
+            LogService = logService;
         }
 
         protected abstract Task<TResult> HandleCommandAsync(TQuery query);
@@ -56,12 +54,12 @@ namespace Avto.BL
             }
             catch (ThirdPartyApiException exception)
             {
-                Logger.WriteError(exception);
+                LogService.WriteError(exception);
                 return new CallDataResult<T>(exception.Message, ErrorType.ThirdPartyApiError417);
             }
             catch (Exception exception)
             {
-                Logger.WriteError(exception);
+                LogService.WriteError(exception);
                 return new CallDataResult<T>(exception.Message, ErrorType.UnexpectedError500);
             }
         }

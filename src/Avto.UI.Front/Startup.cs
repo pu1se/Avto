@@ -28,14 +28,11 @@ namespace Avto.UI.Front
         {
             services.AddRazorPages();
             services.AddServerSideBlazor();
-            services.AddTransient<ExchangeOrganizationConfigApiClient>();
-            services.AddTransient<ExchangeProviderApiClient>();
-            services.AddTransient<ExchangeReportApiClient>();
             services.AddSingleton<UiAppSettings>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ExchangeProviderApiClient providerApi)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
@@ -58,8 +55,6 @@ namespace Avto.UI.Front
                 endpoints.MapBlazorHub();
                 endpoints.MapFallbackToPage("/_Host");
             });
-
-            providerApi.RefreshRatesForAllProvidersAsync();
         }
     }
 }

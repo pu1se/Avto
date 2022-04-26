@@ -1,15 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Avto.BL._Core;
-using Avto.BL.Services.Balance.Models;
-using Avto.BL.Services.Stripe.Models;
-using Avto.BL.Services.Stripe;
-using Avto.DAL.Repositories;
-using Stripe;
+using Avto.DAL;
 
 namespace Avto.BL.Services
 {

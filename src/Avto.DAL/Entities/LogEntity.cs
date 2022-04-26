@@ -6,8 +6,8 @@ using System.Text;
 
 namespace Avto.DAL.Entities
 {
-    [Table("ApiLogs")]
-    public class ApiLogEntity : IEntityWithGuidId
+    [Table("_Logs")]
+    public class LogEntity : IEntityWithGuidId
     {
         public Guid Id { get; set; }
 
@@ -26,6 +26,6 @@ namespace Avto.DAL.Entities
 
         public DateTime LastUpdatedDateUtc { get; set; }
 
-        public long ExecutionTimeInMilliSec { get; set; }
+        public long ExecutionTimeInMillSec { get; set; }
     }
 }

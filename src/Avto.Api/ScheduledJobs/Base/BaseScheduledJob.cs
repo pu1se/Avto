@@ -1,14 +1,9 @@
-﻿using System;
-using System.Diagnostics;
-using System.Runtime.CompilerServices;
+﻿using System.Diagnostics;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Avto.BL;
 using Avto.BL._Core.Logger;
 using Avto.BL.Services;
-using Avto.BL.Services.Exchange.ExchangeProviders;
 using Quartz;
 
 namespace Avto.Api.ScheduledJobs

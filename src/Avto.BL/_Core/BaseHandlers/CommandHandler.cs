@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using Avto.BL._Core;
-using Avto.DAL.Repositories;
+using Avto.DAL;
 
 namespace Avto.BL
 {

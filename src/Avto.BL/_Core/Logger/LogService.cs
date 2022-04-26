@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Avto.BL._Core.Logger;
+using Avto.DAL;
 using Avto.DAL.Entities;
-using Avto.DAL.Repositories;
 
 namespace Avto.BL
 {
@@ -58,17 +58,19 @@ namespace Avto.BL
 
         public bool HasErrors => LogList.Any(x => x.Type == LogType.Error);
 
-        public Task SaveAsync()
+        public async Task SaveAsync()
         {
-            return Storage.ApiLogs.AddAsync(new ApiLogEntity
+            Storage.Logs.Add(new LogEntity
             {
                 Id = LogId,
                 Logs = LogList.ToJson().TrimByLength(8192),
                 PathToAction = httpInfo.PathToAction.TrimByLength(1024),
                 HttpMethod = httpInfo.HttpMethod.TrimByLength(32),
                 ResponseCode = httpInfo.ResponseCode,
-                ExecutionTimeInMilliSec = httpInfo.ExecutionTimeInMilliSec
+                ExecutionTimeInMillSec = httpInfo.ExecutionTimeInMilliSec
             });
+
+            await Storage.SaveChangesAsync();
         }
     }
 }

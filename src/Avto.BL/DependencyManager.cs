@@ -5,14 +5,8 @@ using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Avto.BL._Core;
-using Avto.BL._Core.Logger;
 using Avto.BL.Services;
-using Avto.BL.Services.Exchange.Api.CurrencyLayer;
-using Avto.BL.Services.Exchange.ExchangeProviders.API;
-using Avto.BL.Services.Stripe.Api;
 using Avto.DAL;
-using Avto.DAL.CloudServices;
-using Avto.DAL.Repositories;
 
 namespace Avto.BL
 {
@@ -23,14 +17,10 @@ namespace Avto.BL
             services.AddSingleton(settings);
             services.AddScoped<Storage>();
             services.AddScoped<LogService>();
-            services.AddTransient<IKeyVaultStorage, KeyVaultStorage>(serviceProvider => new KeyVaultStorage(settings.AzureKeyVaultUrl));
-            services.AddTransient<IStripeApi, StripeApi>();
-            services.AddTransient<SafeCallStripeApi>();
-            services.AddTransient<ProviderFactory>();
 
             services.AddTransientHandlers();
             services.AddTransientServices();
-            services.AddTransientExchangeProviderApis();
+            //services.AddTransientExchangeProviderApis();
 
 
             if (settings.Environment == "Test")
@@ -39,7 +29,7 @@ namespace Avto.BL
             }
 
             // hack: not for unit tests
-            services.AddDbContext<DataContext>(
+            services.AddDbContext<Storage>(
                 options =>
                     options.UseSqlServer(settings.DatabaseConnection)
             );                       
@@ -84,7 +74,7 @@ namespace Avto.BL
             }
         }
 
-        private static IEnumerable<Type> _providerTypes;
+        /*private static IEnumerable<Type> _providerTypes;
         private static void AddTransientExchangeProviderApis(this IServiceCollection services)
         {
             if (_providerTypes == null)
@@ -96,6 +86,6 @@ namespace Avto.BL
             {
                 services.AddTransient(type);
             }
-        }
+        }*/
     }
 }

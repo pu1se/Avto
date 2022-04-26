@@ -3,14 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Avto.BL;
-using Avto.BL.Services;
-using Avto.BL.Services.Currency;
-using Avto.BL.Services.Stripe;
-using Avto.BL.Services.Stripe.Api;
 using Avto.DAL;
-using Avto.DAL.CloudServices;
-using Avto.DAL.Repositories;
-using Avto.Tests.BL.Mocks;
 
 namespace Avto.Tests.BL.Base
 {
@@ -99,10 +92,10 @@ namespace Avto.Tests.BL.Base
             TestIsRunningOnLocalPC = false;
 #endif
 
-            var dbOption = new DbContextOptionsBuilder<DataContext>()
+            var dbOption = new DbContextOptionsBuilder<Storage>()
                 .UseSqlServer(connectionStringForUnitTests)
                 .Options;
-            services.AddTransient(serviceProvider => new DataContext(dbOption));
+            services.AddTransient(serviceProvider => new Storage(dbOption));
             services.AddTransient<Storage>();
         }        
     }
