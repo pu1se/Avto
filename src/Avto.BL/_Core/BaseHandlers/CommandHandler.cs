@@ -10,13 +10,13 @@ namespace Avto.BL
         where TCommand : Command
     {
         protected Storage Storage { get; }
-        protected LogService Logger { get; }
+        protected LogService LogService { get; }
 
-        protected CommandHandler(Storage storage, LogService logger)
+        protected CommandHandler(Storage storage, LogService logService)
         {
             Storage = storage;
             Storage.UseNoTracking = false;
-            Logger = logger;
+            LogService = logService;
         }
 
         protected abstract Task<TResult> HandleCommandAsync(TCommand command);
@@ -54,12 +54,12 @@ namespace Avto.BL
             }
             catch (ThirdPartyApiException exception)
             {
-                Logger.WriteError(exception);
+                LogService.WriteError(exception);
                 return new CallDataResult<T>(exception.Message, ErrorType.ThirdPartyApiError417);
             }
             catch (Exception exception)
             {
-                Logger.WriteError(exception);
+                LogService.WriteError(exception);
                 return new CallDataResult<T>(exception.Message, ErrorType.UnexpectedError500);
             }
         }

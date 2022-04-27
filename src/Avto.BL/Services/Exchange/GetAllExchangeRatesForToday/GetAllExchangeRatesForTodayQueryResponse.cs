@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Avto.BL.Services.Exchange.GetExchangeRates
+namespace Avto.BL.Services.Exchange.GetAllExchangeRatesForToday
 {
-    public class GetExchangeRatesQueryResponse
+    public class GetAllExchangeRatesForTodayQueryResponse
     {
         public string FromCurrency { get; set; }
         public string ToCurrency { get; set; }

@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Avto.BL.Services.Exchange.GetExchangeRates
 {
-    public class GetExchangeRatesQuery : Query
+    public class GetSpecificExchangeRatesInfoQuery : Query
     {
         public string FromCurrency { get; set; }
 

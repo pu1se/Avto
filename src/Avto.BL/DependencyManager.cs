@@ -20,7 +20,7 @@ namespace Avto.BL
 
             services.AddTransientHandlers();
             services.AddTransientServices();
-            //services.AddTransientExchangeProviderApis();
+            services.AddTransientExchangeProviderApis();
 
 
             if (settings.Environment == "Test")
@@ -74,18 +74,18 @@ namespace Avto.BL
             }
         }
 
-        /*private static IEnumerable<Type> _providerTypes;
+        private static IEnumerable<Type> _providerTypes;
         private static void AddTransientExchangeProviderApis(this IServiceCollection services)
         {
             if (_providerTypes == null)
             {
-                _providerTypes = AllTypes.Where(type => type.BaseType == typeof(BaseProviderApi));
+                _providerTypes = AllTypes.Where(type => type.BaseType == typeof(BaseExternalApiProvider));
             }
             
             foreach (var type in _providerTypes)
             {
                 services.AddTransient(type);
             }
-        }*/
+        }
     }
 }

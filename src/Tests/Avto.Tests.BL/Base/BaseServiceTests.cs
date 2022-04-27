@@ -63,10 +63,6 @@ namespace Avto.Tests.BL.Base
             var configuration = configurationBuilder.Build();
             var appSettings = new AppSettings(configuration);
 
-            configurationBuilder.AddAzureKeyVault(
-                appSettings.AzureKeyVaultUrl
-            );
-
             var services = new ServiceCollection();
             AddDependencies(services, appSettings);
 
@@ -87,8 +83,6 @@ namespace Avto.Tests.BL.Base
             TestIsRunningOnLocalPC = true;
             //hack for CI machine
 #if RELEASE
-            services.AddTransient<IKeyVaultStorage, KeyVaultMock>();
-            services.AddTransient<IStripeApi, StripeApiMock>();
             TestIsRunningOnLocalPC = false;
 #endif
 

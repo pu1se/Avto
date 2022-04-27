@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using Avto.DAL.Entities;
 using Avto.DAL.Enums;
+using Microsoft.EntityFrameworkCore;
 
 namespace Avto.DAL
 {
@@ -8,7 +9,7 @@ namespace Avto.DAL
     {        
         public static void SeedWithTestData(Storage storage)
         {
-            var isExists = storage.Currencies.Any();
+            var isExists = storage.Currencies.AnyAsync().GetAwaiter().GetResult();
 
             if (!isExists)
             {

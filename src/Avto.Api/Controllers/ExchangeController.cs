@@ -17,9 +17,9 @@ namespace Avto.Api.Controllers
 
         [HttpPost]
         [Route("")]
-        public async Task<IActionResult> GetCurrencyChart([FromBody]GetExchangeRatesQuery query)
+        public async Task<IActionResult> GetCurrencyChart([FromBody]GetSpecificExchangeRatesInfoQuery infoQuery)
         {
-            return await HttpResponse(() => ExchangeService.GetExchangeRates(query));
+            return await HttpResponse(() => ExchangeService.GetSpecificExchangeRatesInfo(infoQuery));
         }
     }
 }

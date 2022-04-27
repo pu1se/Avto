@@ -8,13 +8,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Avto.BL.Services.Exchange.GetExchangeRates
 {
-    public class GetExchangeRatesQueryHandler : QueryHandler<GetExchangeRatesQuery, CallListDataResult<GetExchangeRatesQueryResponse>>
+    public class GetSpecificExchangeRatesInfoQueryHandler : QueryHandler<GetSpecificExchangeRatesInfoQuery, CallListDataResult<GetSpecificExchangeRatesInfoQueryResponse>>
     {
-        public GetExchangeRatesQueryHandler(Storage storage, LogService logService) : base(storage, logService)
+        public GetSpecificExchangeRatesInfoQueryHandler(Storage storage, LogService logService) : base(storage, logService)
         {
         }
 
-        protected override async Task<CallListDataResult<GetExchangeRatesQueryResponse>> HandleCommandAsync(GetExchangeRatesQuery query)
+        protected override async Task<CallListDataResult<GetSpecificExchangeRatesInfoQueryResponse>> HandleCommandAsync(GetSpecificExchangeRatesInfoQuery query)
         {
             var fromDate = DateTime.UtcNow.AddDays(-1 * query.PeriodInDays);
             var list = await this.Storage.ExchangeRates
@@ -25,7 +25,7 @@ namespace Avto.BL.Services.Exchange.GetExchangeRates
                         x.ToCurrencyCode == query.ToCurrency
                         &&
                         x.ExchangeDate >= fromDate)
-                .Select(x => new GetExchangeRatesQueryResponse
+                .Select(x => new GetSpecificExchangeRatesInfoQueryResponse
                 {
                     FromCurrency = x.FromCurrencyCode,
                     ToCurrency = x.ToCurrencyCode,
