@@ -25,6 +25,7 @@ namespace Avto.DAL
             if (!MigrationWasChecked)
             {
                 Database.Migrate();
+                DatabaseInitializer.SeedWithTestData(this);
                 MigrationWasChecked = true;
             }
         }
@@ -80,19 +81,27 @@ namespace Avto.DAL
         {
             var now = DateTime.UtcNow;
 
-            foreach (var changedEntity in ChangeTracker.Entries())
+            foreach (var entity in ChangeTracker.Entries())
             {
-                if (changedEntity.Entity is IEntityWithTrackedDates entity)
+                if (entity.Entity is IEntityWithTrackedDates entityWithTrackedDates)
                 {
-                    switch (changedEntity.State)
+                    switch (entity.State)
                     {
                         case EntityState.Added:
-                            entity.CreatedDateUtc = now;
-                            entity.LastUpdatedDateUtc = now;
+                            entityWithTrackedDates.CreatedDateUtc = now;
+                            entityWithTrackedDates.LastUpdatedDateUtc = now;
                             break;
                         case EntityState.Modified:
-                            entity.LastUpdatedDateUtc = now;
+                            entityWithTrackedDates.LastUpdatedDateUtc = now;
                             break;
+                    }
+                }
+
+                if (entity is IEntityWithGuidId entityWithGuidId)
+                {
+                    if (entity.State == EntityState.Added && entityWithGuidId.Id == Guid.Empty)
+                    {
+                        entityWithGuidId.Id = Guid.NewGuid();
                     }
                 }
             }

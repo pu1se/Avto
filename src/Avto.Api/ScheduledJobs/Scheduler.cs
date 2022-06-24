@@ -15,6 +15,7 @@ namespace Avto.Api.JobsScheduler
         }
 
 
+
         #region private methods
         private static IScheduler CreateScheduler(IServiceCollection services)
         {

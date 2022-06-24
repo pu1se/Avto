@@ -5,7 +5,7 @@ using Avto.DAL;
 
 namespace Avto.BL.Services
 {
-    public abstract class BaseService : CallResultShortcuts
+    public abstract class BaseService
     {
         protected Storage Storage { get; }
         private IServiceProvider Services { get; }

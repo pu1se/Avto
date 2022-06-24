@@ -8,11 +8,19 @@
 
   <ItemGroup>
     <None Remove="appsettings.json" />
+    <None Remove="excel.csv" />
+    <None Remove="file.txt" />
   </ItemGroup>
 
   <ItemGroup>
     <Content Include="appsettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="excel.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="file.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
 

@@ -16,7 +16,7 @@ namespace Avto.DAL.Enums
 
         [Description("US Dollar")]
         USD,
-
+        
         [Description("Polish zloty")]
         PLN,
     }

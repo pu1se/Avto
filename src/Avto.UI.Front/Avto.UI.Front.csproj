@@ -4,6 +4,7 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <LangVersion>latest</LangVersion>
     <ProjectGuid>{36242009-5128-4457-BCAA-9dc410f98e0f}</ProjectGuid>
+    <ErrorOnDuplicatePublishOutputFiles>false</ErrorOnDuplicatePublishOutputFiles>
   </PropertyGroup>
 
   <ItemGroup>

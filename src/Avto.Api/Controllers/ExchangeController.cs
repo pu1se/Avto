@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Avto.BL.Services.Exchange;
 using Avto.BL.Services.Exchange.GetExchangeRates;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Avto.Api.Controllers
@@ -17,9 +18,17 @@ namespace Avto.Api.Controllers
 
         [HttpPost]
         [Route("")]
-        public async Task<IActionResult> GetCurrencyChart([FromBody]GetSpecificExchangeRatesInfoQuery infoQuery)
+        public async Task<IActionResult> GetSpecificExchangeRatesInfo([FromBody]GetSpecificExchangeRatesInfoQuery infoQuery)
         {
             return await HttpResponse(() => ExchangeService.GetSpecificExchangeRatesInfo(infoQuery));
+        }
+
+        [AllowAnonymous]
+        [HttpGet]
+        [Route("currencies")]
+        public async Task<IActionResult> GetAvailableCurrencies()
+        {
+            return await HttpResponse(() => ExchangeService.GetAvailableCurrencies());
         }
     }
 }

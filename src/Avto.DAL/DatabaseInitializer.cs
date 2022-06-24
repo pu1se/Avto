@@ -9,17 +9,17 @@ namespace Avto.DAL
     {        
         public static void SeedWithTestData(Storage storage)
         {
-            var isExists = storage.Currencies.AnyAsync().GetAwaiter().GetResult();
-
-            if (!isExists)
+            foreach (var currencyItem in EnumHelper.ToList<CurrencyType>())
             {
-                foreach (var currency in EnumHelper.ToList<CurrencyType>())
+                var isExists = storage.Currencies.Any(e => e.Code == currencyItem.ToString());
+
+                if (!isExists)
                 {
                     storage.Currencies.Add(new CurrencyEntity
                     {
-                        Code = currency.ToString(),
-                        Name = EnumHelper.GetDescription(currency),
-                    });   
+                        Code = currencyItem.ToString(),
+                        Name = EnumHelper.GetDescription(currencyItem),
+                    });
                 }
             }
 

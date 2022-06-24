@@ -29,6 +29,7 @@ namespace Avto.UI.Front
             services.AddRazorPages();
             services.AddServerSideBlazor();
             services.AddSingleton<UiAppSettings>();
+            services.AddSingleton<ExchangeApiClient>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
