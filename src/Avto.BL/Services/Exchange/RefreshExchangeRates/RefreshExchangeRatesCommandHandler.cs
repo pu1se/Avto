@@ -28,7 +28,6 @@ namespace Avto.BL.Services.Exchange.RefreshExchangeRates
             try
             {
                 LogService.WriteInfo("Fill available currencies.");
-                await FillAvailableCurrencies();
 
                 var provider = CurrencyLayerApi;
 
@@ -104,26 +103,6 @@ namespace Avto.BL.Services.Exchange.RefreshExchangeRates
                     }
 
                     Storage.ExchangeRates.Update(rateToBeUpdated);
-                }
-            }
-
-            await Storage.SaveChangesAsync();
-        }
-
-        private async Task FillAvailableCurrencies()
-        {
-            foreach (var currencyItem in EnumHelper.ToList<CurrencyType>())
-            {
-                var isExists = await Storage.Currencies
-                    .AnyAsync(e => e.Code == currencyItem.ToString());
-
-                if (!isExists)
-                {
-                    Storage.Currencies.Add(new CurrencyEntity
-                    {
-                        Code = currencyItem.ToString(),
-                        Name = EnumHelper.GetDescription(currencyItem),
-                    });
                 }
             }
 

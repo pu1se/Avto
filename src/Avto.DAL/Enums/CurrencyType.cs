@@ -19,5 +19,14 @@ namespace Avto.DAL.Enums
         
         [Description("Polish zloty")]
         PLN,
+
+        [Description("Belarusian Ruble")]
+        BYR,
+
+        [Description("Russian Ruble")]
+        RUB,
+
+        [Description("Swedish Krona")]
+        SEK
     }
 }

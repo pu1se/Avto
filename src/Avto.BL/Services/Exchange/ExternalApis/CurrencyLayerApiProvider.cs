@@ -88,7 +88,7 @@ namespace Avto.BL.Services.Exchange.ExternalApis
         private List<CurrencyLayerRateApiModel> FilterRateList(List<CurrencyLayerRateApiModel> rateList)
         {
             var supportedCurrency = GetSupportedCurrencies();
-            rateList = rateList.Where(x => supportedCurrency.Contains(x.ToCurrency)).ToList();
+            rateList = rateList.Where(x => supportedCurrency.Contains(x.FromCurrency) && supportedCurrency.Contains(x.ToCurrency)).ToList();
             return rateList;
         }
 

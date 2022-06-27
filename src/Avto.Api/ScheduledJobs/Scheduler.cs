@@ -12,6 +12,7 @@ namespace Avto.Api.JobsScheduler
         public static void StartAllScheduledJobs(IServiceCollection services)
         {
             var scheduler = CreateScheduler(services);
+            scheduler.StartJobFor<RefreshExchangeRatesScheduledJob>(60);
         }
 
 
