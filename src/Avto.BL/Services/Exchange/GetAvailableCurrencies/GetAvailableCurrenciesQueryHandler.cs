@@ -16,6 +16,7 @@ namespace Avto.BL.Services.Exchange.GetAvailableCurrencies
 
         protected override async Task<CallListDataResult<AvailableCurrencyResponse>> HandleCommandAsync(EmptyQuery query)
         {
+            LogService.WriteInfo("Get currencies");
             var list = await Storage.Currencies
                 .Select(e => new AvailableCurrencyResponse
                 {
