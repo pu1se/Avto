@@ -72,7 +72,7 @@ namespace Avto.Api
         {
             if (_buildVersion.IsNullOrEmpty())
             {
-                _buildVersion = (DateTime.Today - new DateTime(2020, 1, 1)).Days.ToString();
+                _buildVersion = (DateTime.Today - new DateTime(2022, 6, 24)).Days.ToString();
             }
             return _buildVersion;
             
