@@ -27,10 +27,8 @@ namespace Avto.BL.Services.Exchange.RefreshExchangeRates
         {
             try
             {
-                LogService.WriteInfo("Fill available currencies.");
-
+                LogService.WriteInfo("Refreshing rates.");
                 var provider = CurrencyLayerApi;
-
                 var getRateSourceResult = await SafeCallAsync(() => provider.GetLatestTodayExchangeRateListAsync());
                 if (getRateSourceResult.IsSuccess)
                 {
