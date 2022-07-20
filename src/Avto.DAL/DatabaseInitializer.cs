@@ -7,7 +7,7 @@ namespace Avto.DAL
 {
     public static class DatabaseInitializer
     {        
-        public static void SeedWithTestData(Storage storage)
+        public static void SeedBaseData(Storage storage)
         {
             foreach (var currencyItem in EnumHelper.ToList<CurrencyType>())
             {
@@ -23,7 +23,11 @@ namespace Avto.DAL
                 }
             }
 
-            storage.SaveChangesAsync().GetAwaiter().GetResult();
+            storage.SaveChanges();
+        }
+
+        public static void SeedTestData(Storage storage)
+        {
         }
     }
 }

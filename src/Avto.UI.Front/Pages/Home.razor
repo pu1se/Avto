@@ -74,12 +74,12 @@
         <div class="col-12">
             <RadzenChart>
                 
-                <RadzenLineSeries Smooth="true" LineType="LineType.Solid"
+                <RadzenLineSeries Smooth="true" LineType="LineType.Dashed"
                                   Data="Model.ExchangeListSource"
                                   CategoryProperty="ExchangeDate"
-                                  Title="Open day rate"
-                                  RenderingOrder="1"
-                                  ValueProperty="OpenDayRate">
+                                  Title="Max day rate"
+                                  RenderingOrder="4"
+                                  ValueProperty="MaxDayRate">
                     <RadzenMarkers MarkerType="MarkerType.Circle" />
                 </RadzenLineSeries>
 
@@ -98,15 +98,6 @@
                                   Title="Min day rate"
                                   RenderingOrder="3"
                                   ValueProperty="MinDayRate">
-                    <RadzenMarkers MarkerType="MarkerType.Circle" />
-                </RadzenLineSeries>
-                
-                <RadzenLineSeries Smooth="true" LineType="LineType.Dashed"
-                                  Data="Model.ExchangeListSource"
-                                  CategoryProperty="ExchangeDate"
-                                  Title="Max day rate"
-                                  RenderingOrder="4"
-                                  ValueProperty="MaxDayRate">
                     <RadzenMarkers MarkerType="MarkerType.Circle" />
                 </RadzenLineSeries>
 

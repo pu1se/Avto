@@ -25,7 +25,7 @@ namespace Avto.DAL
             if (!MigrationWasChecked)
             {
                 Database.Migrate();
-                DatabaseInitializer.SeedWithTestData(this);
+                DatabaseInitializer.SeedBaseData(this);
                 MigrationWasChecked = true;
             }
         }

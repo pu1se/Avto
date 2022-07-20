@@ -27,6 +27,15 @@ namespace Avto.DAL.Enums
         RUB,
 
         [Description("Swedish Krona")]
-        SEK
+        SEK,
+
+        [Description("Ukrainian Hryvnia")]
+        UAH,
+
+        [Description("Gold (troy ounce)")]
+        XAU,
+
+        [Description("Silver (troy ounce)")]
+        XAG
     }
 }

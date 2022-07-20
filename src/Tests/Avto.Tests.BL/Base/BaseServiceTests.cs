@@ -27,7 +27,7 @@ namespace Avto.Tests.BL.Base
 
                 using (var scope = _serviceProvider.CreateScope())
                 {
-                    DatabaseInitializer.SeedWithTestData(scope.ServiceProvider.GetRequiredService<Storage>());    
+                    DatabaseInitializer.SeedTestData(scope.ServiceProvider.GetRequiredService<Storage>());    
                 }
                 
                 _isFirstCall = false;
