@@ -1,9 +1,11 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Avto.BL;
 using Avto.BL._Core.Logger;
 using Avto.BL.Services;
+using Avto.DAL;
 using Quartz;
 
 namespace Avto.Api.ScheduledJobs
@@ -11,26 +13,37 @@ namespace Avto.Api.ScheduledJobs
     public abstract class BaseScheduledJob<TService> : IJob where TService : BaseService
     {
         private IServiceScopeFactory ScopeFactory { get; }
+        private string ScheduledJobName { get; }
 
         protected BaseScheduledJob(IServiceScopeFactory serviceScopeFactory)
         {
             ScopeFactory = serviceScopeFactory;
+            ScheduledJobName = GetType().Name;
         }
 
         public async Task Execute(IJobExecutionContext context)
         {
-            // todo: add logger initialization and saving.
             using (var scope = ScopeFactory.CreateScope())
             {
+                var logger = scope.ServiceProvider.GetRequiredService<LogService>();
                 var service = scope.ServiceProvider.GetRequiredService<TService>();
                 var timer = new Stopwatch();
 
+
                 timer.Start();
-                await ExecuteScheduledJob(service);
-                timer.Stop();
-                
-                var logger = scope.ServiceProvider.GetRequiredService<LogService>();
-                await SaveLogs(logger, timer);
+                try
+                {
+                    await ExecuteScheduledJob(service);
+                }
+                catch (Exception ex)
+                {
+                    logger.WriteError(ex);
+                }
+                finally
+                {
+                    timer.Stop();
+                    await SaveLogs(logger, timer);
+                }
             }
         }
 
@@ -40,7 +53,7 @@ namespace Avto.Api.ScheduledJobs
         {
             logger.AddHttpInfo(new LogHttpInfo
             {
-                PathToAction = GetType().Name,
+                PathToAction = ScheduledJobName,
                 ResponseCode = logger.HasErrors ? 500 : 200,
                 HttpMethod = null,
                 ExecutionTimeInMilliSec = timer.ElapsedMilliseconds

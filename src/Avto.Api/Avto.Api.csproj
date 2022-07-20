@@ -4,7 +4,7 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <LangVersion>latest</LangVersion>
     <UserSecretsId>07ca2680-3220-49b9-a706-d70ea50c77c1</UserSecretsId>
-    <Version>0.01</Version>
+    <Version>0.02</Version>
     <ProjectGuid>{CD139985-D40B-416D-B35E-8CA5E198DEA9}</ProjectGuid>
   </PropertyGroup>
 
