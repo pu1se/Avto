@@ -11,12 +11,16 @@ namespace Avto.UI.Front.ApiRequests
         public UiAppSettings(IConfiguration configuration)
         {
             Configuration = configuration;
+            PaymentApiUrl = Configuration["PaymentApiUrl"];
+            PaymentApiAuthClientId = Configuration["PaymentApiAuthenticationClientId"];
+            PaymentApiAuthClientSecret = Configuration["PaymentApiAuthenticationClientSecret"];
         }
+
 
         private IConfiguration Configuration { get; }
 
-        public string PaymentApiUrl => Configuration["PaymentApiUrl"];
-        public string PaymentApiAuthClientId => Configuration["PaymentApiAuthenticationClientId"];
-        public string PaymentApiAuthClientSecret => Configuration["PaymentApiAuthenticationClientSecret"];
+        public string PaymentApiUrl { get; }
+        public string PaymentApiAuthClientId { get; }
+        public string PaymentApiAuthClientSecret { get; }
     }
 }
