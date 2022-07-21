@@ -36,6 +36,21 @@ namespace Avto.DAL.Enums
         XAU,
 
         [Description("Silver (troy ounce)")]
-        XAG
+        XAG,
+
+        [Description("Norwegian Krone")]
+        NOK,
+        
+        [Description("Swiss Franc")]
+        CHF,
+
+        [Description("British Pound")]
+        GBP,
+
+        [Description("Japanese Yen")]
+        JPY,
+
+        [Description("Turkish Lira")]
+        TRY,
     }
 }
