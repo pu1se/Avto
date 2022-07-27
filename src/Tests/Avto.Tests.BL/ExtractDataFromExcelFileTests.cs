@@ -18,6 +18,7 @@ namespace Avto.Tests.BL
     [TestClass]
     public class ExtractDataFromExcelFileTests : BaseServiceTests<ExchangeService>
     {
+        [Ignore]
         [TestMethod]
         public async Task SuccessExtractDataFromExcelFile()
         {

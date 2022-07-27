@@ -31,11 +31,26 @@ namespace Avto.Tests.BL
         }
 
         [TestMethod]
+        public async Task SuccessRefreshCurrencyAndExchangeRateTables()
+        {
+            var currencyList = EnumHelper.ToList<CurrencyType>();
+            var currentDate = DateTime.UtcNow.Date;
+            var exchangeRate = await Storage.ExchangeRates
+                .Where(e => e.ExchangeDate == currentDate)
+                .OrderByDescending(e => e.ExchangeDate)
+                .ToListAsync();
+            foreach (var currency in currencyList)
+            {
+                var rate = exchangeRate.FirstOrDefault(e => e.ToCurrencyCode == currency.ToString());
+                Assert.IsTrue(rate != null);
+                Assert.IsTrue(rate.Rate > 0);
+                Assert.IsTrue(rate.LastUpdatedDateUtc > DateTime.UtcNow.Date);
+            }
+        }
+
+        [TestMethod]
         public async Task CalculateAllTodayExchangeRates()
         {
-            var refreshRatesResult = await Service.RefreshExchangeRates();
-            Assert.IsTrue(refreshRatesResult.IsSuccess);
-
             var getAvailableCurrenciesResult = await Service.GetAvailableCurrencies();
             Assert.IsTrue(getAvailableCurrenciesResult.IsSuccess);
             var currencyList = getAvailableCurrenciesResult.Data.ToArray();

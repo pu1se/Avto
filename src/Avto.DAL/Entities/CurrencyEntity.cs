@@ -10,7 +10,6 @@ namespace Avto.DAL.Entities
     [Table("Currencies")]
     public class CurrencyEntity : IEntityWithCodeId
     {
-        [Key]
         [Required]
         [MaxLength(8)]
         public string Code { get; set; }

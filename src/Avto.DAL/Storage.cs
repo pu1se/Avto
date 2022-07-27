@@ -59,6 +59,9 @@ namespace Avto.DAL
 
         private static void SetIndexes(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<CurrencyEntity>()
+                .HasKey(x => x.Code);
+
             modelBuilder.Entity<ExchangeRateEntity>()
                 .HasKey(e => e.Id)
                 .IsClustered(false);
