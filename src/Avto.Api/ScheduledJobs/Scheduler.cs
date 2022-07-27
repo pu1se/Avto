@@ -44,17 +44,18 @@ namespace Avto.Api.JobsScheduler
 
         private static void StartJobFor<TScheduledJob>(
             this IScheduler scheduler, 
-            int withIntervalInMinutes = 0,
-            int withIntervalInHours = 0) where TScheduledJob : IJob
+            in int withIntervalInMinutes = 0,
+            in int withIntervalInHours = 0) where TScheduledJob : IJob
         {
             if (withIntervalInMinutes == 0 && withIntervalInHours == 0)
             {
                 throw new ArgumentException("Either withIntervalInMinutes or withIntervalInHours must be greater than 0");
             }
 
+            var intervalInMinutes = withIntervalInMinutes;
             if (withIntervalInHours > 0)
             {
-                withIntervalInMinutes += withIntervalInHours * 60;
+                intervalInMinutes += withIntervalInHours * 60;
             }
 
             var job = JobBuilder.Create<TScheduledJob>().Build();
@@ -63,7 +64,7 @@ namespace Avto.Api.JobsScheduler
                 .WithIdentity("Trigger_" + typeof(TScheduledJob).Name)
                 .StartNow()                            
                 .WithSimpleSchedule(x => x
-                    .WithIntervalInMinutes(withIntervalInMinutes)
+                    .WithIntervalInMinutes(intervalInMinutes)
                     .RepeatForever())                   
                 .Build();                              
  

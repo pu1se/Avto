@@ -67,15 +67,20 @@ namespace Avto.DAL
                 .IsClustered(false);
             modelBuilder.Entity<ExchangeRateEntity>()
                 .HasIndex(e => e.ExchangeDate)
-                .IsClustered(true);
+                .IsClustered(true)
+                .IsUnique(false);
             modelBuilder.Entity<ExchangeRateEntity>()
-                .HasIndex(e => e.FromCurrencyCode);
+                .HasIndex(e => e.FromCurrencyCode)
+                .IsUnique(false);
             modelBuilder.Entity<ExchangeRateEntity>()
-                .HasIndex(e => e.ToCurrencyCode);
+                .HasIndex(e => e.ToCurrencyCode)
+                .IsUnique(false);
             modelBuilder.Entity<ExchangeRateEntity>()
-                .HasIndex(e => e.CreatedDateUtc);
+                .HasIndex(e => e.CreatedDateUtc)
+                .IsUnique(false);
             modelBuilder.Entity<ExchangeRateEntity>()
-                .HasIndex(e => e.LastUpdatedDateUtc);
+                .HasIndex(e => e.LastUpdatedDateUtc)
+                .IsUnique(false);
             modelBuilder.Entity<ExchangeRateEntity>()
                 .HasIndex(e => new
                 {
@@ -83,7 +88,7 @@ namespace Avto.DAL
                     e.ToCurrencyCode,
                     e.ExchangeDate
                 })
-                .IsUnique();
+                .IsUnique(true);
 
 
             modelBuilder.Entity<LogEntity>()
@@ -91,17 +96,23 @@ namespace Avto.DAL
                 .IsClustered(false);
             modelBuilder.Entity<LogEntity>()
                 .HasIndex(e => e.CreatedDateUtc)
-                .IsClustered(true);
+                .IsClustered(true)
+                .IsUnique(false);
             modelBuilder.Entity<LogEntity>()
-                .HasIndex(e => e.LastUpdatedDateUtc);
+                .HasIndex(e => e.LastUpdatedDateUtc)
+                .IsUnique(false);
             modelBuilder.Entity<LogEntity>()
-                .HasIndex(e => e.PathToAction);
+                .HasIndex(e => e.PathToAction)
+                .IsUnique(false);
             modelBuilder.Entity<LogEntity>()
-                .HasIndex(e => e.HttpMethod);
+                .HasIndex(e => e.HttpMethod)
+                .IsUnique(false);
             modelBuilder.Entity<LogEntity>()
-                .HasIndex(e => e.ResponseCode);
+                .HasIndex(e => e.ResponseCode)
+                .IsUnique(false);
             modelBuilder.Entity<LogEntity>()
-                .HasIndex(e => e.ExecutionTimeInMillSec);
+                .HasIndex(e => e.ExecutionTimeInMillSec)
+                .IsUnique(false);
         }
 
         private static void SetDefaultDecimalSize(ModelBuilder modelBuilder)
