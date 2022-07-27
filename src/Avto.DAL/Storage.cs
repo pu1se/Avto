@@ -60,7 +60,11 @@ namespace Avto.DAL
         private static void SetIndexes(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<ExchangeRateEntity>()
-                .HasIndex(e => e.ExchangeDate);
+                .HasKey(e => e.Id)
+                .IsClustered(false);
+            modelBuilder.Entity<ExchangeRateEntity>()
+                .HasIndex(e => e.ExchangeDate)
+                .IsClustered(true);
             modelBuilder.Entity<ExchangeRateEntity>()
                 .HasIndex(e => e.FromCurrencyCode);
             modelBuilder.Entity<ExchangeRateEntity>()
@@ -75,10 +79,16 @@ namespace Avto.DAL
                     e.FromCurrencyCode,
                     e.ToCurrencyCode,
                     e.ExchangeDate
-                });
+                })
+                .IsUnique();
+
 
             modelBuilder.Entity<LogEntity>()
-                .HasIndex(e => e.CreatedDateUtc);
+                .HasKey(e => e.Id)
+                .IsClustered(false);
+            modelBuilder.Entity<LogEntity>()
+                .HasIndex(e => e.CreatedDateUtc)
+                .IsClustered(true);
             modelBuilder.Entity<LogEntity>()
                 .HasIndex(e => e.LastUpdatedDateUtc);
             modelBuilder.Entity<LogEntity>()

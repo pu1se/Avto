@@ -27,6 +27,14 @@ namespace Avto.BL.Services.Exchange.RefreshExchangeRates
         {
             try
             {
+                if (DateTime.UtcNow.DayOfWeek == DayOfWeek.Sunday
+                    ||
+                    DateTime.UtcNow.DayOfWeek == DayOfWeek.Saturday)
+                {
+                    LogService.WriteInfo("Skip exchange update at the weekend.");
+                    return SuccessResult();
+                }
+
                 LogService.WriteInfo("Refreshing rates.");
                 var provider = CurrencyLayerApi;
                 var getRateSourceResult = await SafeCallAsync(() => provider.GetLatestTodayExchangeRateListAsync());

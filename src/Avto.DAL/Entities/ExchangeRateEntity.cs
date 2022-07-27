@@ -10,7 +10,6 @@ namespace Avto.DAL.Entities
     [Table("CurrencyExchangeRates")]
     public class ExchangeRateEntity : IEntityWithGuidId
     {
-        [Key]
         public Guid Id { get; set; }
 
         public string FromCurrencyCode { get; set; }
