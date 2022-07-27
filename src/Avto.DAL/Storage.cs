@@ -24,9 +24,17 @@ namespace Avto.DAL
         {
             if (!MigrationWasChecked)
             {
-                Database.Migrate();
-                DatabaseInitializer.SeedBaseData(this);
-                MigrationWasChecked = true;
+                try
+                {
+                    this.Database.SetCommandTimeout(60*20);
+                    Database.Migrate();
+                    DatabaseInitializer.SeedBaseData(this);
+                    MigrationWasChecked = true;
+                }
+                catch (Exception e)
+                {
+                    SendEmail.ToMyself("Avto db migration issue.", "Exception during migration " + e.ToFormattedString()).GetAwaiter().GetResult();
+                }
             }
         }
 
@@ -57,6 +65,30 @@ namespace Avto.DAL
                 .HasIndex(e => e.FromCurrencyCode);
             modelBuilder.Entity<ExchangeRateEntity>()
                 .HasIndex(e => e.ToCurrencyCode);
+            modelBuilder.Entity<ExchangeRateEntity>()
+                .HasIndex(e => e.CreatedDateUtc);
+            modelBuilder.Entity<ExchangeRateEntity>()
+                .HasIndex(e => e.LastUpdatedDateUtc);
+            modelBuilder.Entity<ExchangeRateEntity>()
+                .HasIndex(e => new
+                {
+                    e.FromCurrencyCode,
+                    e.ToCurrencyCode,
+                    e.ExchangeDate
+                });
+
+            modelBuilder.Entity<LogEntity>()
+                .HasIndex(e => e.CreatedDateUtc);
+            modelBuilder.Entity<LogEntity>()
+                .HasIndex(e => e.LastUpdatedDateUtc);
+            modelBuilder.Entity<LogEntity>()
+                .HasIndex(e => e.PathToAction);
+            modelBuilder.Entity<LogEntity>()
+                .HasIndex(e => e.HttpMethod);
+            modelBuilder.Entity<LogEntity>()
+                .HasIndex(e => e.ResponseCode);
+            modelBuilder.Entity<LogEntity>()
+                .HasIndex(e => e.ExecutionTimeInMillSec);
         }
 
         private static void SetDefaultDecimalSize(ModelBuilder modelBuilder)
