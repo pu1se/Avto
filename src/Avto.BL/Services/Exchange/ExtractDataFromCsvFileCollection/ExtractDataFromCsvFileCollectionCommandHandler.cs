@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -163,27 +164,26 @@ namespace Avto.BL.Services.Exchange.ExtractDataFromCsvFileCollection
 
         private async Task ExtractDataFromCsvFilesToDatabase()
         {
-            var currentDirectory = System.IO.Directory.GetParent(System.IO.Directory.GetCurrentDirectory());
+            var currentDirectory = Directory.GetParent(Directory.GetCurrentDirectory());
             while (!currentDirectory.ToString().EndsWith(@"\src"))
             {
-                currentDirectory = System.IO.Directory.GetParent(currentDirectory.ToString());
+                currentDirectory = Directory.GetParent(currentDirectory.ToString());
             }
 
-            currentDirectory = System.IO.Directory.GetParent(currentDirectory.ToString());
+            currentDirectory = Directory.GetParent(currentDirectory.ToString());
 
-            var directoryWithCsvFiles =
-                System.IO.Directory.GetDirectories(currentDirectory + "\\docs")?.FirstOrDefault();
+            var directoryWithCsvFiles = Directory.GetDirectories(currentDirectory + "\\docs")?.FirstOrDefault();
             if (directoryWithCsvFiles == null)
             {
                 return;
             }
 
-            var csvFiles = System.IO.Directory.GetFiles(directoryWithCsvFiles.ToString());
+            var csvFiles = Directory.GetFiles(directoryWithCsvFiles.ToString());
             var supportedCurrencies = EnumHelper.ToList<CurrencyType>().Select(x => x.ToString());
             foreach (var pathToFile in csvFiles)
             {
                 // read rows from csv file
-                var rows = await System.IO.File.ReadAllLinesAsync(pathToFile);
+                var rows = await File.ReadAllLinesAsync(pathToFile);
                 var firstLine = rows.First();
                 var columns = firstLine.Split(',');
                 var currencies = columns.Skip(1).Take(1).First().Split(" ").First().Split("/");
