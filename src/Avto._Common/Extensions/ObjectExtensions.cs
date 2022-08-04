@@ -35,7 +35,7 @@ namespace Avto
         public static decimal ToRoundedRate(this decimal rate)
         {
             var result = Math.Round(rate, 10, MidpointRounding.AwayFromZero);
-            return decimal.Parse(result.ToString().TrimEnd('0'));
+            return result/1.000000000000000000000000000000000m;
         }
     }
 }

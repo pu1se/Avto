@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -24,6 +25,9 @@ namespace Avto.DAL
         {
             if (!MigrationWasChecked)
             {
+                CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("en-US");
+                CultureInfo.DefaultThreadCurrentUICulture = new CultureInfo("en-US");
+
                 try
                 {
                     this.Database.SetCommandTimeout(60*20);

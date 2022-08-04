@@ -14,7 +14,7 @@ namespace Avto.Api.JobsScheduler
         {
             var scheduler = CreateScheduler(services);
 
-            scheduler.StartJobFor<RefreshExchangeRatesScheduledJob>(withIntervalInHours: 1);
+            scheduler.StartJobFor<RefreshExchangeRatesScheduledJob>(withIntervalInMinutes: 15);
             scheduler.StartJobFor<CheckLogsForTodayErrorsAndNotifyAboutThemScheduledJob>(withIntervalInHours: 24);
             scheduler.StartJobFor<CheckThatCalculatedCurrencyExchangeRatesTableWasUpdatedScheduledJob>(withIntervalInHours: 24);
         }
