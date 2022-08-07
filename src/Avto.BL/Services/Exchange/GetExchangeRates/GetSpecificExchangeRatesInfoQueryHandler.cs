@@ -17,7 +17,6 @@ namespace Avto.BL.Services.Exchange.GetExchangeRates
         protected override async Task<CallListDataResult<GetSpecificExchangeRatesInfoQueryResponse>> HandleCommandAsync(GetSpecificExchangeRatesInfoQuery query)
         {
             LogService.WriteInfo("Get rates");
-            var fromDate = DateTime.UtcNow.AddDays(-1 * query.PeriodInDays);
             var list = await this.Storage.ExchangeRates
                 .Where(
                     x => 
@@ -25,7 +24,10 @@ namespace Avto.BL.Services.Exchange.GetExchangeRates
                         &&
                         x.ToCurrencyCode == query.ToCurrency
                         &&
-                        x.ExchangeDate >= fromDate)
+                        x.ExchangeDate >= query.FromDate
+                        &&
+                        x.ExchangeDate <= query.ToDate
+                )
                 .Select(x => new GetSpecificExchangeRatesInfoQueryResponse
                 {
                     FromCurrency = x.FromCurrencyCode,

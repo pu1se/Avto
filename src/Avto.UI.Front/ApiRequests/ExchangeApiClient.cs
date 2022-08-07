@@ -20,5 +20,10 @@ namespace Avto.UI.Front.ApiRequests
         {
             return Api.PostAsync<IEnumerable<GetSpecificExchangeRatesInfoQueryResponse>>($"exchange", query);
         }
+
+        public Task<ApiCallDataResult<string>> GetVersion()
+        {
+            return Api.GetAsync<string>("exchange/version");
+        }
     }
 }

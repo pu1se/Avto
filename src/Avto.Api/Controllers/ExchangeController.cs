@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Reflection;
+using System.Threading.Tasks;
 using Avto.BL.Services.Exchange;
 using Avto.BL.Services.Exchange.GetExchangeRates;
 using Microsoft.AspNetCore.Authorization;
@@ -23,12 +24,25 @@ namespace Avto.Api.Controllers
             return await HttpResponse(() => ExchangeService.GetSpecificExchangeRatesInfo(infoQuery));
         }
 
-        [AllowAnonymous]
         [HttpGet]
         [Route("currencies")]
         public async Task<IActionResult> GetAvailableCurrencies()
         {
             return await HttpResponse(() => ExchangeService.GetAvailableCurrencies());
+        }
+
+        [AllowAnonymous]
+        [HttpGet]
+        [Route("version")]
+        public IActionResult GetVersion()
+        {
+            var version = typeof(Startup)
+                .GetTypeInfo()
+                .Assembly
+                .GetCustomAttribute<AssemblyInformationalVersionAttribute>()
+                .InformationalVersion;
+
+            return Ok(version);
         }
     }
 }

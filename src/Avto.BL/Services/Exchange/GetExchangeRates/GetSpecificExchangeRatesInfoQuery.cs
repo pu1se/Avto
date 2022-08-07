@@ -10,6 +10,8 @@ namespace Avto.BL.Services.Exchange.GetExchangeRates
 
         public string ToCurrency { get; set; }
 
-        public int PeriodInDays { get; set; }
+        public DateTime FromDate { get; set; }
+        
+        public DateTime ToDate { get; set; }
     }
 }

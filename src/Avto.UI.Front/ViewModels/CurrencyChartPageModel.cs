@@ -9,5 +9,6 @@ namespace Avto.UI.Front.ViewModels
         public IEnumerable<GetSpecificExchangeRatesInfoQueryResponse> ExchangeListSource { get; set; }
         public GetSpecificExchangeRatesInfoQuery Filter { get; set; } = new GetSpecificExchangeRatesInfoQuery();
         public Dictionary<int, string> PeriodInDaysSource { get; set; }
+        public string Version { get; set; }
     }
 }

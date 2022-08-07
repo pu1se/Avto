@@ -87,7 +87,7 @@ namespace Avto.UI.Front.ApiRequests
             return response.Data;
         }
 
-        public Task<ApiCallDataResult<TResult>> GetAsync<TResult>(string path, object data = null) where TResult : class, new()
+        public Task<ApiCallDataResult<TResult>> GetAsync<TResult>(string path, object data = null)
         {
             return SendRequestAsync<TResult>(Method.GET, path, data);
         }

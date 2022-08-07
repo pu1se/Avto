@@ -1,6 +1,6 @@
 ﻿@page "/"
 
-<h3>CurrencyChart</h3>
+<h2>Currency Exchange Forecasting v<span>@Model.Version</span></h2>
 <br />
 <PageViewer PageModel="@Model">
 
@@ -11,7 +11,7 @@
     </div>
 
     <div class="row">
-        <div class="col-8">
+        <div class="col-12">
             <div class="row">
 
                 <div class="col-2">
@@ -49,18 +49,25 @@
                                     Data="Model.CurrencyListSource"/>
                 </div>
                 
-                <div class="col-2">
-                    Period
+                <div class="col-3">
+                    From Date
                     <br/>
-                    <RadzenDropDown AllowClear="false"
-                                    TValue="int"
-                                    @bind-Value="Model.Filter.PeriodInDays"
-                                    Change="@(async args => { await this.OnFilterChange(); })"
-                                    Class="dropdown"
-                                    TextProperty="Value"
-                                    ValueProperty="Key"
-                                    Data="Model.PeriodInDaysSource"/>
-                </div>                
+                    <RadzenDatePicker 
+                        @bind-Value="Model.Filter.FromDate" 
+                        DateFormat="dd-MM-yyyy" 
+                        Change="@(async args => { await this.OnFilterChange(); })"
+                        Class="date-picker"/>
+                </div>
+                
+                <div class="col-3">
+                    To Date
+                    <br/>
+                    <RadzenDatePicker 
+                        @bind-Value="Model.Filter.ToDate" 
+                        DateFormat="dd-MM-yyyy" 
+                        Change="@(async args => { await this.OnFilterChange(); })" 
+                        Class="date-picker"/>
+                </div>
 
             </div>
         </div>
@@ -113,6 +120,15 @@
         .dropdown {
             width: 100%;
         }
+        
+        .date-picker {
+            width: 165px;
+        }
+
+        .date-picker .rz-inputtext {
+            padding-right: 0;
+            width: 125px;
+        }
     </style>
 </PageViewer>
 
@@ -148,13 +164,15 @@
             {1100, "3 year"},
             {36500, "all time"},
         };
+        Model.Version = (await _exchangeReportApi.GetVersion()).Data;
         
 
         Model.Filter = new GetSpecificExchangeRatesInfoQuery
         {
             FromCurrency = "USD",
             ToCurrency = "EUR",
-            PeriodInDays = 14
+            FromDate = DateTime.Now.AddDays(-30).Date,
+            ToDate = DateTime.Now.Date,
         };
 
 
