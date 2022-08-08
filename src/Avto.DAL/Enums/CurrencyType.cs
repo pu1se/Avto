@@ -52,5 +52,8 @@ namespace Avto.DAL.Enums
 
         [Description("Turkish Lira")]
         TRY,
+
+        [Description("Bitcoin crypto currency")]
+        BTC
     }
 }
