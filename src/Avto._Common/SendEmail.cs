@@ -13,7 +13,7 @@ namespace Avto
         {
             var emailMessage = new MailMessage
             {
-                From = new MailAddress("pavel.pontus@gmail.com", $"Payment MS System"),
+                From = new MailAddress("pavel.pontus@gmail.com", $"Exchange-info System"),
                 To = { new MailAddress("pavel.pontus@appxite.com") },
                 Subject = subject,
                 Body = body,

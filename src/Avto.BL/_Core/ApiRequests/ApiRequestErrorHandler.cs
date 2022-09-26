@@ -7,7 +7,7 @@ namespace Avto.BL._Core.ApiRequests
 {
     public static class ApiRequestErrorHandler
     {
-        public static CallResult HandleResponse(IRestResponse response)
+        public static CallResult HandleResponse(RestResponse response)
         {
             var statusCode = (int)response.StatusCode;
 

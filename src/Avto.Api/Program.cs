@@ -1,25 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
+﻿using Avto.Api;
+using Microsoft.AspNetCore.Builder;
 
-namespace Avto.Api
-{
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            CreateWebHostBuilder(args).Build().Run();
-        }
 
-        public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
-            WebHost.CreateDefaultBuilder(args)
-                .CaptureStartupErrors(true)
-                .UseStartup<Startup>();
-    }
-}
+var builder = WebApplication.CreateBuilder(args);
+var startup = new Startup(builder.Environment);
+startup.ConfigureServices(builder.Services);
+
+var app = builder.Build();
+startup.Configure(app, app.Environment);
+app.Run();

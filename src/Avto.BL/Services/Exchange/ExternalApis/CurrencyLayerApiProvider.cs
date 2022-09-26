@@ -24,11 +24,8 @@ namespace Avto.BL.Services.Exchange.ExternalApis
 
         public async Task<List<CurrencyLayerRateApiModel>> GetLatestTodayExchangeRateListAsync()
         {
-            var client = new RestClient
-            {
-                BaseUrl = new Uri("http://apilayer.net/api/live?source=EUR&access_key="
-                                  +Settings.CurrencyLayerApiKey, UriKind.Absolute)
-            };
+            var client = new RestClient(new Uri("http://apilayer.net/api/live?source=EUR&access_key="
+                                                +Settings.CurrencyLayerApiKey, UriKind.Absolute));
 
             var response = await client.ExecuteAsync(new RestRequest());
             var callResult = ApiRequestErrorHandler.HandleResponse(response);
