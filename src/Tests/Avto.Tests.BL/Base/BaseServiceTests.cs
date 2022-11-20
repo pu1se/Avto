@@ -71,33 +71,14 @@ namespace Avto.Tests.BL.Base
             var appSettings = new AppSettings(configuration);
 
             var services = new ServiceCollection();
-            AddDependencies(services, appSettings);
-
-            return services.BuildServiceProvider();
-        }
-
-        private void AddDependencies(ServiceCollection services, AppSettings appSettings)
-        {            
-            var connectionStringForUnitTests = appSettings.DatabaseConnection;
-
-#if DEBUG
-            connectionStringForUnitTests =
-                @"Server=.\; Database=Avto; Initial Catalog=Avto;Integrated Security=False;Trusted_Connection=True;";
-#endif
-            
             DependencyManager.Configure(services, appSettings);
-
             TestIsRunningOnLocalPC = true;
             //hack for CI machine
 #if RELEASE
             TestIsRunningOnLocalPC = false;
 #endif
 
-            var dbOption = new DbContextOptionsBuilder<Storage>()
-                .UseSqlServer(connectionStringForUnitTests)
-                .Options;
-            services.AddTransient(serviceProvider => new Storage(dbOption));
-            services.AddTransient<Storage>();
-        }        
+            return services.BuildServiceProvider();
+        }
     }
 }
