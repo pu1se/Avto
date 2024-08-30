@@ -25,7 +25,7 @@ namespace Avto.UI.Front.ApiRequests
 
         private RestRequest GenerateRequest(Method httpMethod, string path, object data)
         {
-            var request = new RestRequest(path, httpMethod, DataFormat.Json);
+            var request = new RestRequest(path, httpMethod);
 
             if (this.Token != null)
             {
@@ -74,7 +74,7 @@ namespace Avto.UI.Front.ApiRequests
 
         private TokenModel GetToken(string baseUrl, string apiAuthClientId, string apiAuthClientSecret)
         {
-            var request = new RestRequest("token", Method.POST);
+            var request = new RestRequest("token", Method.Post);
 
             request.AddHeader("Content-Type", "application/x-www-form-urlencoded");
             request.AddParameter("grant_type", "client_credentials");
@@ -89,27 +89,27 @@ namespace Avto.UI.Front.ApiRequests
 
         public Task<ApiCallDataResult<TResult>> GetAsync<TResult>(string path, object data = null)
         {
-            return SendRequestAsync<TResult>(Method.GET, path, data);
+            return SendRequestAsync<TResult>(Method.Get, path, data);
         }
 
         public Task<ApiCallResult> PutAsync(string path, object data)
         {
-            return SendRequestAsync(Method.PUT, path, data);
+            return SendRequestAsync(Method.Put, path, data);
         }
 
         public Task<ApiCallResult> DeleteAsync(string path, object data)
         {
-            return SendRequestAsync(Method.DELETE, path, data);
+            return SendRequestAsync(Method.Delete, path, data);
         }
 
         public Task<ApiCallResult> PostAsync(string path, object data = null)
         {
-            return SendRequestAsync(Method.POST, path, data);
+            return SendRequestAsync(Method.Post, path, data);
         }
 
         public Task<ApiCallDataResult<TResult>> PostAsync<TResult>(string path, object data) where TResult : class
         {
-            return SendRequestAsync<TResult>(Method.POST, path, data);
+            return SendRequestAsync<TResult>(Method.Post, path, data);
         }
 
         private class TokenModel

@@ -1,8 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Avto.BL;
+using Avto.BL.Services.Exchange;
+using Avto.BL.Services.Exchange.RefreshExchangeRates;
 using Avto.DAL;
 
 namespace Avto.Tests.BL.Base
@@ -19,7 +22,7 @@ namespace Avto.Tests.BL.Base
 
 
         [TestInitialize]
-        public void BaseInitialize()
+        public async Task BaseInitialize()
         {
             if (_isFirstCall)
             {
@@ -30,6 +33,10 @@ namespace Avto.Tests.BL.Base
                     DatabaseInitializer.SeedTestData(scope.ServiceProvider.GetRequiredService<Storage>());    
                 }
                 
+                _scope = _serviceProvider.CreateScope(); 
+                var calculatedExchangeRatesService = Resolve<ExchangeService>();
+                await calculatedExchangeRatesService.RefreshExchangeRates();
+
                 _isFirstCall = false;
             }
 
@@ -64,33 +71,14 @@ namespace Avto.Tests.BL.Base
             var appSettings = new AppSettings(configuration);
 
             var services = new ServiceCollection();
-            AddDependencies(services, appSettings);
-
-            return services.BuildServiceProvider();
-        }
-
-        private void AddDependencies(ServiceCollection services, AppSettings appSettings)
-        {            
-            var connectionStringForUnitTests = appSettings.DatabaseConnection;
-
-#if DEBUG
-            connectionStringForUnitTests =
-                @"Server=.\; Database=Avto; Initial Catalog=Avto;Integrated Security=False;Trusted_Connection=True;";
-#endif
-            
             DependencyManager.Configure(services, appSettings);
-
             TestIsRunningOnLocalPC = true;
             //hack for CI machine
 #if RELEASE
             TestIsRunningOnLocalPC = false;
 #endif
 
-            var dbOption = new DbContextOptionsBuilder<Storage>()
-                .UseSqlServer(connectionStringForUnitTests)
-                .Options;
-            services.AddTransient(serviceProvider => new Storage(dbOption));
-            services.AddTransient<Storage>();
-        }        
+            return services.BuildServiceProvider();
+        }
     }
 }

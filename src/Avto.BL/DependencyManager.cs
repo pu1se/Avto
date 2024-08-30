@@ -22,13 +22,6 @@ namespace Avto.BL
             services.AddTransientServices();
             services.AddTransientExchangeProviderApis();
 
-
-            if (settings.Environment == "Test")
-            {
-                return;
-            }
-
-            // hack: not for unit tests
             services.AddDbContext<Storage>(
                 options =>
                     options.UseSqlServer(settings.DatabaseConnection)

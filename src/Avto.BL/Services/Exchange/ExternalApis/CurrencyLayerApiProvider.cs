@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -23,11 +24,8 @@ namespace Avto.BL.Services.Exchange.ExternalApis
 
         public async Task<List<CurrencyLayerRateApiModel>> GetLatestTodayExchangeRateListAsync()
         {
-            var client = new RestClient
-            {
-                BaseUrl = new Uri("http://apilayer.net/api/live?source=EUR&access_key="
-                                  +Settings.CurrencyLayerApiKey, UriKind.Absolute)
-            };
+            var client = new RestClient(new Uri("http://apilayer.net/api/live?source=EUR&access_key="
+                                                +Settings.CurrencyLayerApiKey, UriKind.Absolute));
 
             var response = await client.ExecuteAsync(new RestRequest());
             var callResult = ApiRequestErrorHandler.HandleResponse(response);
@@ -49,7 +47,7 @@ namespace Avto.BL.Services.Exchange.ExternalApis
                 var currency = EnumHelper.TryParse<CurrencyType>(name);
                 if (currency != null)
                 {
-                    ratesFromCurrencyLayer.Add(currency, decimal.Parse(value));
+                    ratesFromCurrencyLayer.Add(currency, decimal.Parse(value, NumberStyles.Float));
                 }
             }
 

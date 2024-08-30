@@ -11,7 +11,7 @@
     </div>
 
     <div class="row">
-        <div class="col-12">
+        <div class="col-10">
             <div class="row">
 
                 <div class="col-2">
@@ -20,7 +20,6 @@
                     <RadzenDropDown AllowClear="false"
                                     TValue="string"
                                     @bind-Value="Model.Filter.FromCurrency"
-                                    Change="@(async args => { await this.OnFilterChange(); })"
                                     Class="dropdown"
                                     FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
                                     FilterOperator="StringFilterOperator.StartsWith"
@@ -41,7 +40,6 @@
                     <RadzenDropDown AllowClear="false"
                                     TValue="string"
                                     @bind-Value="Model.Filter.ToCurrency"
-                                    Change="@(async args => { await this.OnFilterChange(); })"
                                     Class="dropdown"
                                     FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
                                     FilterOperator="StringFilterOperator.StartsWith"
@@ -49,26 +47,35 @@
                                     Data="Model.CurrencyListSource"/>
                 </div>
                 
-                <div class="col-3">
+                <div class="col-2">
                     From Date
                     <br/>
                     <RadzenDatePicker 
                         @bind-Value="Model.Filter.FromDate" 
                         DateFormat="dd-MM-yyyy" 
-                        Change="@(async args => { await this.OnFilterChange(); })"
                         Class="date-picker"/>
                 </div>
                 
-                <div class="col-3">
+                <div class="col-2">
                     To Date
                     <br/>
                     <RadzenDatePicker 
                         @bind-Value="Model.Filter.ToDate" 
                         DateFormat="dd-MM-yyyy" 
-                        Change="@(async args => { await this.OnFilterChange(); })" 
                         Class="date-picker"/>
                 </div>
+                
+                
 
+            </div>
+        </div>
+        
+        <div class="col-2">
+            <div class="row">
+                <div class="offset-1 col-2">
+                    <br/>
+                    <RadzenButton Text="Apply" Click="@(async args => { await this.OnFilterChange(); })"></RadzenButton>
+                </div>
             </div>
         </div>
     </div>
@@ -79,33 +86,58 @@
 
     <div class="row">
         <div class="col-12">
+            
+            <RadzenCard Class="w-100 mb-4" Style="display: flex; align-items: center; gap: 0.5rem" >
+                <RadzenCheckBox @bind-Value="@Model.ShowTrend" Name="trend"></RadzenCheckBox>
+                <RadzenLabel Text="Trend" For="trend" Style="margin-right: 1rem; color: crimson" />
+                <RadzenCheckBox @bind-Value="@Model.ShowMean" Name="mean"></RadzenCheckBox>
+                <RadzenLabel Text="Mean" For="mean" Style="margin-right: 1rem; color: brown" />
+            </RadzenCard>            
+
             <RadzenChart>
-                
-                <RadzenLineSeries Smooth="true" LineType="LineType.Dashed"
+
+                <RadzenLineSeries Smooth="true" LineType="LineType.Dotted"
                                   Data="Model.ExchangeListSource"
                                   CategoryProperty="ExchangeDate"
                                   Title="Max day rate"
-                                  RenderingOrder="4"
+                                  RenderingOrder="1"
+                                  Stroke="#aaa"
+                                  StrokeWidth="3.5"
                                   ValueProperty="MaxDayRate">
-                    <RadzenMarkers MarkerType="MarkerType.Circle" />
+                    <RadzenMarkers MarkerType="MarkerType.Square"/>
+                </RadzenLineSeries>
+
+                <RadzenLineSeries Smooth="true" LineType="LineType.Solid"
+                                  Data="Model.ExchangeListSource"
+                                  CategoryProperty="ExchangeDate"
+                                  Title="Open day rate"
+                                  RenderingOrder="2"
+                                  Stroke="aqua"
+                                  ValueProperty="OpenDayRate">
+                    <RadzenMarkers MarkerType="MarkerType.Circle"/>
                 </RadzenLineSeries>
 
                 <RadzenLineSeries Smooth="true" LineType="LineType.Solid"
                                   Data="Model.ExchangeListSource"
                                   CategoryProperty="ExchangeDate"
                                   Title="Close day rate"
-                                  RenderingOrder="2"
+                                  RenderingOrder="3"
+                                  Stroke="darkturquoise"
                                   ValueProperty="Rate">
                     <RadzenMarkers MarkerType="MarkerType.Circle"/>
+                    <RadzenSeriesTrendLine Visible="@Model.ShowTrend" Stroke="crimson" StrokeWidth="5" LineType="LineType.Dashed"/>
+                    <RadzenSeriesMeanLine Visible="@Model.ShowMean" Stroke="brown" StrokeWidth="5" LineType="LineType.Dashed" />
                 </RadzenLineSeries>
-                
-                <RadzenLineSeries Smooth="true" LineType="LineType.Dashed"
+
+                <RadzenLineSeries Smooth="true" LineType="LineType.Dotted"
                                   Data="Model.ExchangeListSource"
                                   CategoryProperty="ExchangeDate"
                                   Title="Min day rate"
-                                  RenderingOrder="3"
+                                  RenderingOrder="4"
+                                  Stroke="#aaa"
+                                  StrokeWidth="3.5"
                                   ValueProperty="MinDayRate">
-                    <RadzenMarkers MarkerType="MarkerType.Circle" />
+                    <RadzenMarkers MarkerType="MarkerType.Square"/>
                 </RadzenLineSeries>
 
                 <RadzenCategoryAxis Padding="5" FormatString="{0:dd-MM-yy}"/>
@@ -153,17 +185,6 @@
             ShowError(getCurrenciesResult.ErrorMessage);
         }
         Model.CurrencyListSource = getCurrenciesResult.Data.Select(x => x.Code).ToArray();
-        Model.PeriodInDaysSource = new Dictionary<int, string>
-        {
-            {14, "2 weeks"},
-            {30, "1 month"},
-            {61, "2 month"},
-            {92, "3 month"},
-            {185, "6 month"},
-            {365, "1 year"},
-            {1100, "3 year"},
-            {36500, "all time"},
-        };
         Model.Version = (await _exchangeReportApi.GetVersion()).Data;
         
 
@@ -182,6 +203,7 @@
             ShowError(getExchangeListResult.ErrorMessage);
         }
         Model.ExchangeListSource = getExchangeListResult.Data;
+        Model.ShowTrend = true;
 
         Model.IsReady = true;
     }

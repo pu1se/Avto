@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
 
@@ -16,18 +16,11 @@
 
   <ItemGroup>
     <PackageReference Include="Deedle" Version="2.5.0" />
-    <PackageReference Include="RestSharp" Version="106.11.7" />
-    <PackageReference Include="Stripe.net" Version="39.28.0" />
+    <PackageReference Include="RestSharp" Version="108.0.2" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Avto.DAL\Avto.DAL.csproj" />
   </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="RestSharp">
-      <HintPath>C:\Users\pavel\.nuget\packages\restsharp\106.6.10\lib\netstandard2.0\RestSharp.dll</HintPath>
-    </Reference>
-  </ItemGroup>  
 
 </Project>

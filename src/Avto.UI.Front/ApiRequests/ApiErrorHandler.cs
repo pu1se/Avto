@@ -11,7 +11,7 @@ namespace Avto.UI.Front.ApiRequests
 {
     public static class ApiErrorHandler
     {
-        public static ApiCallResult HandleResponse(IRestResponse response)
+        public static ApiCallResult HandleResponse(RestResponse response)
         {
             var statusCode = (int)response.StatusCode;
 

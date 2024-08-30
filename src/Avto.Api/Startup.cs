@@ -56,7 +56,7 @@ namespace Avto.Api
                 var build = GetCurrentBuildVersionString();
                 settings.SwaggerDoc("v1", new OpenApiInfo
                 {
-                    Title = "Payment Microservice Api",
+                    Title = "Exchange Microservice Api",
                     Version = $"v{version}.{build}",
                 });
             });
@@ -91,7 +91,7 @@ namespace Avto.Api
             app.UseSwagger();
             app.UseSwaggerUI(settings =>
             {
-                settings.SwaggerEndpoint("/swagger/v1/swagger.json", "Payment Microservice Api");
+                settings.SwaggerEndpoint("/swagger/v1/swagger.json", "Exchange Microservice Api");
                 settings.RoutePrefix = string.Empty;
             });
             
