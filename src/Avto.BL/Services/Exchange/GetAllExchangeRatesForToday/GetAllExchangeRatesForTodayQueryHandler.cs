@@ -8,13 +8,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Avto.BL.Services.Exchange.GetAllExchangeRatesForToday
 {
-    public class GetAllExchangeRatesForTodayQueryHandler : QueryHandler<EmptyQuery, CallListDataResult<GetAllExchangeRatesForTodayQueryResponse>>
+    public class GetAllExchangeRatesForTodayQueryHandler : QueryHandler<EmptyQuery, CallListResult<GetAllExchangeRatesForTodayQueryResponse>>
     {
         public GetAllExchangeRatesForTodayQueryHandler(Storage storage, LogService logService) : base(storage, logService)
         {
         }
 
-        protected override async Task<CallListDataResult<GetAllExchangeRatesForTodayQueryResponse>> HandleCommandAsync(EmptyQuery query)
+        protected override async Task<CallListResult<GetAllExchangeRatesForTodayQueryResponse>> HandleCommandAsync(EmptyQuery query)
         {
             var list = await this.Storage.ExchangeRates
                 .Where(x => x.ExchangeDate == DateTime.UtcNow.Date)

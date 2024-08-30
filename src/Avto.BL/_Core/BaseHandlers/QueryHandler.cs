@@ -45,22 +45,22 @@ namespace Avto.BL
             return await HandleCommandAsync(query);
         }
 
-        protected async Task<CallDataResult<T>> SafeCallAsync<T>(Func<Task<T>> serviceMethod)
+        protected async Task<CallResult<T>> SafeCallAsync<T>(Func<Task<T>> serviceMethod)
         {
             try
             {
                 var result = await serviceMethod();
-                return new CallDataResult<T>(result);
+                return new CallResult<T>(result);
             }
             catch (ThirdPartyApiException exception)
             {
                 LogService.WriteError(exception);
-                return new CallDataResult<T>(exception.Message, ErrorType.ThirdPartyApiError417);
+                return new CallResult<T>(exception.Message, ErrorType.ThirdPartyApiError417);
             }
             catch (Exception exception)
             {
                 LogService.WriteError(exception);
-                return new CallDataResult<T>(exception.Message, ErrorType.UnexpectedError500);
+                return new CallResult<T>(exception.Message, ErrorType.UnexpectedError500);
             }
         }
     }

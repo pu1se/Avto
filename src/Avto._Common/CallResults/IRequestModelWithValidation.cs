@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Avto
 {
-    public interface IValidationModel
+    public interface IRequestModelWithValidation
     {
         Dictionary<string, List<string>> GetValidationErrors();
     }

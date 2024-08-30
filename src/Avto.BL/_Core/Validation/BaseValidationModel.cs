@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Avto.BL
 {
-    public abstract class BaseValidationModel : IValidationModel
+    public abstract class BaseValidationModel : IRequestModelWithValidation
     {
         private Dictionary<string, List<string>> _validationErrors;
 

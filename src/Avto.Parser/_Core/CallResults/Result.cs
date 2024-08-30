@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Avto.BL
+namespace Avto.Parser._Core.CallResults
 {
     public static class Result
     {
@@ -37,7 +37,7 @@ namespace Avto.BL
         }
 
         public static CallListResult<T> FailList<T>(
-            string errorMessage, 
+            string errorMessage,
             ErrorType errorType = ErrorType.UnexpectedError500)
         {
             return new CallListResult<T>(errorMessage, errorType);

@@ -15,7 +15,7 @@ namespace Avto.Api.Controllers
     public abstract class BaseApiController : Controller
     {
         //implement later: move HttpResponse to middle-ware
-        protected async Task<IActionResult> HttpResponse<TResult>(Func<Task<CallListDataResult<TResult>>> serviceMethod)
+        protected async Task<IActionResult> HttpResponse<TResult>(Func<Task<CallListResult<TResult>>> serviceMethod)
         {
             var result = await serviceMethod();
 
@@ -25,7 +25,7 @@ namespace Avto.Api.Controllers
             return Ok(result.Data);
         }
 
-        protected async Task<IActionResult> HttpResponse<TResult>(Func<Task<CallDataResult<TResult>>> serviceMethod)
+        protected async Task<IActionResult> HttpResponse<TResult>(Func<Task<CallResult<TResult>>> serviceMethod)
         {
             var result = await serviceMethod();
 

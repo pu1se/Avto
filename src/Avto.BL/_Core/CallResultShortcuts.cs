@@ -13,12 +13,12 @@ namespace Avto.BL
             return Result.Success();
         }
 
-        protected CallDataResult<T> SuccessResult<T>(T result)
+        protected CallResult<T> SuccessResult<T>(T result)
         {
             return Result.Success(result);
         }
 
-        protected CallListDataResult<T> SuccessListResult<T>(IEnumerable<T> result)
+        protected CallListResult<T> SuccessListResult<T>(IEnumerable<T> result)
         {
             return Result.SuccessList(result);
         }
@@ -33,24 +33,24 @@ namespace Avto.BL
             return Result.Fail(errorMessage, errorType);
         }
 
-        protected CallDataResult<T> FailResult<T>(string errorMessage, ErrorType errorType = ErrorType.UnexpectedError500)
+        protected CallResult<T> FailResult<T>(string errorMessage, ErrorType errorType = ErrorType.UnexpectedError500)
         {
             return Result.Fail<T>(errorMessage, errorType);
         }
 
-        protected CallListDataResult<T> FailListResult<T>(
+        protected CallListResult<T> FailListResult<T>(
             string errorMessage, 
             ErrorType errorType = ErrorType.UnexpectedError500)
         {
             return Result.FailList<T>(errorMessage, errorType);
         }
 
-        protected CallListDataResult<T> FailListResult<T>(CallResult callResult)
+        protected CallListResult<T> FailListResult<T>(CallResult callResult)
         {
             return Result.FailList<T>(callResult.ErrorMessage, callResult.ErrorType);
         }
 
-        protected CallDataResult<T> FailResult<T>(CallResult callResult)
+        protected CallResult<T> FailResult<T>(CallResult callResult)
         {
             return Result.Fail<T>(callResult);
         }
@@ -65,17 +65,17 @@ namespace Avto.BL
             return Result.NotFound<T>(errorMessage);
         }
 
-        protected CallResult ValidationFailResult(IValidationModel model)
+        protected CallResult ValidationFailResult(IRequestModelWithValidation model)
         {
             return Result.ValidationFail(model);
         }
 
-        protected CallDataResult<T> ValidationFailResult<T>(IValidationModel model)
+        protected CallResult<T> ValidationFailResult<T>(IRequestModelWithValidation model)
         {
             return Result.ValidationFail<T>(model);
         }
 
-        protected CallListDataResult<T> ValidationFailListResult<T>(IValidationModel model)
+        protected CallListResult<T> ValidationFailListResult<T>(IRequestModelWithValidation model)
         {
             return Result.ValidationFailList<T>(model);
         }
@@ -90,7 +90,7 @@ namespace Avto.BL
             return Result.ValidationFail(key, errorMessage);
         }
 
-        protected CallDataResult<T> ValidationFailResult<T>(string key, string errorMessage)
+        protected CallResult<T> ValidationFailResult<T>(string key, string errorMessage)
         {
             return Result.ValidationFail<T>(key, errorMessage);
         }
@@ -100,12 +100,12 @@ namespace Avto.BL
             return Result.SuccessValidation();
         }
 
-        protected CallDataResult<T> ValidationSuccessResult<T>() where T : new()
+        protected CallResult<T> ValidationSuccessResult<T>() where T : new()
         {
             return Result.SuccessValidation<T>();
         }
 
-        protected CallListDataResult<T> ValidationSuccessListResult<T>()
+        protected CallListResult<T> ValidationSuccessListResult<T>()
         {
             return Result.SuccessValidationList<T>();
         }

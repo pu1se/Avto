@@ -24,7 +24,7 @@ namespace Avto.BL.Services.Exchange
             return GetHandler<ExtractDataFromCsvFileCollectionCommandHandler>().HandleAsync(EmptyCommand.Value);
         }
 
-        public Task<CallListDataResult<AvailableCurrencyResponse>> GetAvailableCurrencies()
+        public Task<CallListResult<AvailableCurrencyResponse>> GetAvailableCurrencies()
         {
             return GetHandler<GetAvailableCurrenciesQueryHandler>().HandleAsync(EmptyQuery.Value);
         }
@@ -34,13 +34,13 @@ namespace Avto.BL.Services.Exchange
             return GetHandler<RefreshExchangeRatesCommandHandler>().HandleAsync(EmptyCommand.Value);
         }
 
-        public Task<CallListDataResult<GetSpecificExchangeRatesInfoQueryResponse>> GetSpecificExchangeRatesInfo(
+        public Task<CallListResult<GetSpecificExchangeRatesInfoQueryResponse>> GetSpecificExchangeRatesInfo(
             GetSpecificExchangeRatesInfoQuery infoQuery)
         {
             return GetHandler<GetSpecificExchangeRatesInfoQueryHandler>().HandleAsync(infoQuery);
         }
 
-        public Task<CallListDataResult<GetAllExchangeRatesForTodayQueryResponse>> GetAllExchangeRatesForToday()
+        public Task<CallListResult<GetAllExchangeRatesForTodayQueryResponse>> GetAllExchangeRatesForToday()
         {
             return GetHandler<GetAllExchangeRatesForTodayQueryHandler>().HandleAsync(EmptyQuery.Value);
         }

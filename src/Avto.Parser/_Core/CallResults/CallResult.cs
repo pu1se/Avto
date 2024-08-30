@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿
+using System;
+using System.Collections.Generic;
 using System.Linq;
 
-namespace Avto
+namespace Avto.Parser._Core.CallResults
 {
     public class CallResult
     {
@@ -24,7 +26,7 @@ namespace Avto
         {
             ErrorType = errorType;
         }
-        
+
         public CallResult()
         {
             ErrorType = ErrorType.NotError;

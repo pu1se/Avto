@@ -8,13 +8,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Avto.BL.Services.Exchange.GetAvailableCurrencies
 {
-    public class GetAvailableCurrenciesQueryHandler : QueryHandler<EmptyQuery, CallListDataResult<AvailableCurrencyResponse>>
+    public class GetAvailableCurrenciesQueryHandler : QueryHandler<EmptyQuery, CallListResult<AvailableCurrencyResponse>>
     {
         public GetAvailableCurrenciesQueryHandler(Storage storage, LogService logService) : base(storage, logService)
         {
         }
 
-        protected override async Task<CallListDataResult<AvailableCurrencyResponse>> HandleCommandAsync(EmptyQuery query)
+        protected override async Task<CallListResult<AvailableCurrencyResponse>> HandleCommandAsync(EmptyQuery query)
         {
             LogService.WriteInfo("Get currencies");
             var list = await Storage.Currencies

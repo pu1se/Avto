@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Avto
+namespace Avto.Parser._Core.CallResults
 {
     public class NotFoundResult : CallResult
     {

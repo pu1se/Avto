@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Avto
+namespace Avto.Parser._Core.CallResults
 {
     public class ValidationFailResult : CallResult
     {
@@ -12,7 +12,7 @@ namespace Avto
             if (model == null)
             {
                 ErrorType = ErrorType.ModelWasNotInitialized400;
-                ValidationErrors.Add("model", new List<string>{"Can not parse parameters from request"});
+                ValidationErrors.Add("model", new List<string> { "Can not parse parameters from request" });
             }
 
             var modelErrors = model?.GetValidationErrors();
@@ -30,7 +30,7 @@ namespace Avto
             {
                 {key, new List<string>{errorMessage}}
             };
-            
+
             ErrorType = ErrorType.ValidationError400;
             ErrorMessage = "Validation error";
             ValidationErrors = modelErrors;
@@ -40,7 +40,7 @@ namespace Avto
         {
             foreach (var item in modelErrors)
             {
-                ValidationErrors[item.Key] = new List<string>{item.Value};
+                ValidationErrors[item.Key] = new List<string> { item.Value };
             }
 
             ErrorType = ErrorType.ValidationError400;
@@ -55,7 +55,7 @@ namespace Avto
             if (model == null)
             {
                 ErrorType = ErrorType.ModelWasNotInitialized400;
-                ValidationErrors.Add("model", new List<string>{"Can not parse parameters from request"});
+                ValidationErrors.Add("model", new List<string> { "Can not parse parameters from request" });
             }
 
             var modelErrors = model?.GetValidationErrors();
@@ -73,7 +73,7 @@ namespace Avto
             {
                 {key, new List<string>{errorMessage}}
             };
-            
+
             ErrorType = ErrorType.ValidationError400;
             ErrorMessage = "Validation error";
             ValidationErrors = modelErrors;
@@ -83,8 +83,8 @@ namespace Avto
 
     public class ValidationFailListResult<T> : CallListResult<T>
     {
-        public ValidationFailListResult(IRequestModelWithValidation model) 
-            : base(default(IEnumerable<T>))
+        public ValidationFailListResult(IRequestModelWithValidation model)
+            : base(default)
         {
             if (model == null)
             {
@@ -101,8 +101,8 @@ namespace Avto
             }
         }
 
-        public ValidationFailListResult(string key, string errorMessage) 
-            : base(default(IEnumerable<T>))
+        public ValidationFailListResult(string key, string errorMessage)
+            : base(default)
         {
             var modelErrors = new Dictionary<string, List<string>>
             {

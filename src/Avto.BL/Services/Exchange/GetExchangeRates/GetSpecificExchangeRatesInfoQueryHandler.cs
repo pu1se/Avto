@@ -8,13 +8,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Avto.BL.Services.Exchange.GetExchangeRates
 {
-    public class GetSpecificExchangeRatesInfoQueryHandler : QueryHandler<GetSpecificExchangeRatesInfoQuery, CallListDataResult<GetSpecificExchangeRatesInfoQueryResponse>>
+    public class GetSpecificExchangeRatesInfoQueryHandler : QueryHandler<GetSpecificExchangeRatesInfoQuery, CallListResult<GetSpecificExchangeRatesInfoQueryResponse>>
     {
         public GetSpecificExchangeRatesInfoQueryHandler(Storage storage, LogService logService) : base(storage, logService)
         {
         }
 
-        protected override async Task<CallListDataResult<GetSpecificExchangeRatesInfoQueryResponse>> HandleCommandAsync(GetSpecificExchangeRatesInfoQuery query)
+        protected override async Task<CallListResult<GetSpecificExchangeRatesInfoQueryResponse>> HandleCommandAsync(GetSpecificExchangeRatesInfoQuery query)
         {
             LogService.WriteInfo("Get rates");
             var list = await this.Storage.ExchangeRates
